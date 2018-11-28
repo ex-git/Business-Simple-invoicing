@@ -1,0 +1,99 @@
+/* CSS reset */
+html, body, div, span, h1, h2, pre, a, img, ol, ul, li, section, footer {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+    box-sizing: border-box;
+}
+
+.main {
+    /* background-image: linear-gradient(to top, rgba(17,17,17,0.5), rgba(17,17,17,0.5)),url("./main-background.jpeg"); */
+    height: 100%;
+    /* background-size:cover;
+    padding-top: 10px;
+    color: #fff; */
+
+}
+html {
+    width: 100%;
+    height: 100%
+}
+
+h1 {
+    font-size: 1.5em
+}
+
+h2 {
+    font-size: 2em;
+}
+section {
+    width: 94%;
+    margin: 0 auto;
+}
+
+body {
+    margin: 0 auto;
+    height:100%
+}
+
+.top-header {
+    width: 100%;
+    font-size: 1.2em;
+    position: relative;
+    background-image: linear-gradient(to top, rgba(17,17,17,0.8), rgba(17,17,17,0.5)),url("./main-background.jpeg");
+    height: 100%;
+    background-size:cover;
+    padding-top: 10px;
+    color: #fff;
+}
+
+.header, .navigation {
+    display: inline-block;
+}
+
+.header {
+    position: absolute;
+    left: 2%
+}
+.navigation {
+    position: absolute;
+    right: 2%
+}
+
+li {
+    display: inline-block;
+    list-style-image: none;
+    margin-left: 5px
+}
+
+.centerSlogan {
+    margin: auto;
+    position: absolute;
+    top:40%;
+    bottom:60%;
+    left: 0;
+    right:0;
+    text-align: center
+}
+
+.mainPageLogin {
+    margin-top: 5%;
+    height: 60px;
+    width: 180px;
+    font-size: 1.2em;
+    background-color: #006efc;
+    border-radius: 7px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.mainPageLogin:hover {
+    background-color: #10299c;
+}
+
+.logIn {
+    margin-right: 5px
+}
