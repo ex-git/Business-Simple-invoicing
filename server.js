@@ -11,6 +11,12 @@ function startServer(DATABASEURL, port=8080) {
     })
 }
 
+function stopServer() {
+    app.close()
+}
+
 if (require.main === module) {
     startServer().catch(error=>console.error(error))
 }
+
+module.exports = {app, startServer, stopServer}
