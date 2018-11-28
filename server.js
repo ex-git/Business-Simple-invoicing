@@ -1,9 +1,9 @@
 const express = require("express")
 const app = express()
-
+const {PORT} = require("./config")
 app.use(express.static("./public"))
 
-function startServer(DATABASEURL, port=8080) {
+function startServer(port=PORT) {
     return new Promise((resolve, reject)=>{
         app.listen(port, ()=> {
             console.log(`Your app is running at ${port}`)
