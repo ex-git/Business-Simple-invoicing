@@ -13,21 +13,36 @@
 <body>
     <main role="main" class="main">
         <section role="region" class="top-header">
-            <header role="banner" class="header center">
+            <header role="banner" class="mainHeader">
                 <h1>Online Business Invoicing System v1.0</h1>
             </header>
-            <nav role="navigation" class="navigation center">
+            <nav role="navigation" class="navigation">
                 <ul>
                     <li>Log out</li>
                     <li>Profile</li>
                 </ul>
             </nav>
-            <div class="centerSlogan">
-                <h2>Create invoice online, from anywhere!</h2>
-                <button class="mainPageLogin">
-                    <span class="logIn">Log in</span>
-                    <i class="fas fa-sign-in-alt"></i>
-                </button>
+            <div class="centerBody">
+                <div class="mainPageGreeting">
+                    <h2>Create invoice online, from anywhere!</h2>
+                    <button class="loginButton mainPageLogin">
+                        <span class="logIn">Log in</span>
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </div>
+                <form action="" class="logInForm" hidden>
+                    <fieldset>
+                        <label for="userName">User Name</label>
+                        <input type="text" id="userName" placeholder="John.Smith">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="***">
+                        <br>
+                        <button class="loginButton logInAuth">
+                                <span class="logIn">Log in</span>
+                                <i class="fas fa-sign-in-alt"></i>
+                        </button>
+                    </fieldset>
+                </form>
             </div>
         </section>
     </main>

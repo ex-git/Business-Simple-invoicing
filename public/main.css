@@ -49,16 +49,15 @@ body {
     color: #fff;
 }
 
-.header, .navigation {
+.mainHeader, .navigation {
     display: inline-block;
+    position: absolute;
 }
 
-.header {
-    position: absolute;
+.mainHeader {
     left: 2%
 }
 .navigation {
-    position: absolute;
     right: 2%
 }
 
@@ -68,18 +67,21 @@ li {
     margin-left: 5px
 }
 
-.centerSlogan {
+.hiden {
+    display: none;
+}
+
+.centerBody {
     margin: auto;
     position: absolute;
-    top:40%;
-    bottom:60%;
+    top:35%;
     left: 0;
     right:0;
     text-align: center
 }
 
-.mainPageLogin {
-    margin-top: 5%;
+.loginButton {
+    margin-top: 2%;
     height: 60px;
     width: 180px;
     font-size: 1.2em;
@@ -90,10 +92,32 @@ li {
     cursor: pointer;
 }
 
-.mainPageLogin:hover {
+.loginButton:hover {
     background-color: #10299c;
 }
 
 .logIn {
     margin-right: 5px
+}
+
+fieldset {
+    border: none
+}
+
+.logInForm input{
+    width: 200px;
+    height: 20px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+    
+.logInForm label {
+    font-size: 1.2em;
+}
+.logInForm label::before, .logInForm label::after{
+    content: " ";
+    display: table;
+    margin: 2px;
+    clear: both
 }
