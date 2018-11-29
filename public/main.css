@@ -80,10 +80,10 @@ li {
     text-align: center
 }
 
-.loginButton {
+.button {
     margin-top: 2%;
-    height: 60px;
-    width: 180px;
+    height: 80px;
+    width: 200px;
     font-size: 1.2em;
     background-color: #006efc;
     border-radius: 7px;
@@ -92,11 +92,11 @@ li {
     cursor: pointer;
 }
 
-.loginButton:hover {
+.button:hover {
     background-color: #10299c;
 }
 
-.logIn {
+.submit {
     margin-right: 5px
 }
 
@@ -120,4 +120,31 @@ fieldset {
     display: table;
     margin: 2px;
     clear: both
+}
+
+.feature {
+    display: block
+}
+
+.newInvoiceForm {
+    max-width:680px;
+    margin:auto;
+}
+
+.addMoreItem, .remove {
+    background: none;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.items label[for^='item']::before{
+    content: "";
+    display: table;
+    margin: 2px;
+    clear: both
+}
+
+.customerInfo {
+    text-align: left;
 }

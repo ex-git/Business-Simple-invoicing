@@ -11,10 +11,10 @@ chai.use(chaiHttp)
 
 describe("Testing CRUD", function(){
     before (function(){
-        return startServer
+        return startServer()
     })
     after (function(){
-        return stopServer
+        return stopServer()
     })
     describe("Testing on GET", function(){
         it("should get 200 status on GET", function(){

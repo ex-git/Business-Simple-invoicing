@@ -29,6 +29,12 @@ const customerSchema = mongoose.Schema({
     }
 })
 
+const invoiceSchema = mongoose.Schema({
+    customer: {type: mongoose.Schema.Types.ObjectId, ref: "customer"},
+    items: [{item: String,
+    charge: Number}]
+})
+
 userSchema.virtual("fullName").get(function(){
     return `${this.firstName} ${this.lastName}`.trim();
 })
@@ -39,5 +45,6 @@ customerSchema.virtual("fullName").get(function(){
 
 const User = mongoose.model("User", userSchema);
 const Customer = mongoose.model("Customer", userSchema)
+const Invoice = mongoose.model("Invoice", invoiceSchema)
 
-module.exports = {User, Customer};
+module.exports = {User, Customer, Invoice};

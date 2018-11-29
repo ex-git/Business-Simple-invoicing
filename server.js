@@ -11,6 +11,10 @@ app.use(express.static("./public"))
 //same as bodyParser
 app.use(express.json());
 
+app.post("/users", (req, res) =>{
+    res.send("ok")
+} )
+
 let server;
 
 function startServer(databaseUrl=TEST_DATABASE_URL, port=PORT) {
