@@ -3,29 +3,32 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
+    companyName: {type: String, require},
     firstName: {type: String, require},
     lastName: {type: String, require},
     password: {type: String, require},
     userName: {type: String},
-    companyName: {type: String, require},
+    phoneNumber: {type: String},
+    email: {type: String},
     address: {
         street: String,
         city: String,
         State: String,
         zipCode: String,
-        phoneNumber: Number,
     }
 })
 
 const customerSchema = mongoose.Schema({
+    companyName: {type: String},
     firstName: {type: String, require},
     lastName: {type: String, require},
+    phoneNumber: {type: String},
+    email: {type: String},
     address: {
         street: String,
         city: String,
         State: String,
         zipCode: String,
-        phoneNumber: Number,
     }
 })
 
