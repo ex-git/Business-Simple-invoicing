@@ -202,8 +202,8 @@ const newUserFormPart1 = `
 <form class="newUserForm1">
     <fieldset>
         <legend>Set up new account</legend>
-        <label for="userName">User Name</label>
-        <input type="text" id="userName" required placeholder="" title="This will be your login name">
+        <label for="newUserName">User Name</label>
+        <input type="text" id="newUserName" required placeholder="" title="This will be your login name">
         <br>
         <div class="checkUserNameAvailbility iconFont" hidden></div>
         <br>
@@ -223,12 +223,12 @@ const newUserFormPart2 = `
             <div class="passwordForm">
                 <div class="leftForm">
                     <label for="userPassword1">Password</label>
-                    <input type="password" id="userPassword1" class="newPassword" placeholder="" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters">
+                    <input type="password" id="userPassword1" class="newPassword">
                     <br>
                 </div>
                 <div class="rightForm">
                     <label for="userPassword2">Re-enter password</label>
-                    <input type="password" id="userPassword2" class="newPassword" placeholder="" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters">
+                    <input type="password" id="userPassword2" class="newPassword">
                     <br>
                 </div>
                 <div class="passwordCheck iconFont" hidden>&#xf071 Both password must match</div>
@@ -378,15 +378,15 @@ function catchButtonsClick () {
 }
 
 function addNewUser() {
-    $('.main').on('change keyup', '.newUserForm1 #userName', event=>{
+    $('.main').on('change keyup', '.newUserForm1 #newUserName', event=>{
         event.preventDefault();
-        if ($('.newUserForm1 #userName').val().trim()) {
+        if ($(event.currentTarget).val().trim()) {
             fetch(checkENDPOINT,{
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                     "checkname": "userName",
-                    "checkvalue" : $('.newUserForm1 #userName').val(),
+                    "checkvalue" : $(event.currentTarget).val(),
                 }
             })
             .then(response=>{
@@ -411,20 +411,21 @@ function addNewUser() {
     })
     $('.main').on('change keyup', '.newUserForm1 #userCompanyName', event=>{
         event.preventDefault();
-        if ($('.newUserForm1 #userCompanyName').val().trim()) {
+        if ($(event.currentTarget).val().trim()) {
             fetch(checkENDPOINT,{
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                     "checkname": "companyName",
-                    "checkvalue" : $('.newUserForm1 #userCompanyName').val()
+                    "checkvalue" : $(event.currentTarget).val()
                 }
             })
             .then(response=>{
                 if (response.status === 200) {
                     $('.newUserForm1 .checkCompanyNameAvailbility').prop('hidden', true)
                     $('.newUserForm1 .checkCompanyNameAvailbility').html(`available`)
-                    if ($('.newUserForm1 .checkUserNameAvailbility')[0].hasAttribute('hidden') && $('.newUserForm1 #userName').val().trim()) {
+                    console.log($('.newUserForm1 #newUserName').val())
+                    if ($('.newUserForm1 .checkUserNameAvailbility')[0].hasAttribute('hidden') && $('.newUserForm1 #newUserName').val().trim()) {
                         $('.newUserForm1 .newUserNext').prop('disabled', false)
                     }
                 }
@@ -463,7 +464,7 @@ function addNewUser() {
             firstName: $('#userFirstName').val().trim(),
             lastName: $('#userLastName').val().trim(),
             password: $('#userPassword1').val().trim(),
-            userName: $('.newUserForm1 #userName').val().trim(),
+            userName: $('.newUserForm1 #newUserName').val().trim(),
             phoneNumber: $('#userPhoneNumber').val().trim(),
             email: $('#userEmail').val().trim(),
             address: {
