@@ -1,44 +1,10 @@
 'use strict'
 
-const newUserENDPOINT = '/newUser'
-const userENDPOINT = '/users'
-const checkENDPOINT = '/checkAvailability'
-const customerENDPOINT = '/customers'
-const invoiceENDPOINT = '/invoices'
-
-const fakeInvoice = {
-    customer: 123123,
-    item: [{item: "textbook1",charge: "11"},{item: "textbook2",charge: "22"}]
-}
-const fakeCustomer = {
-    _id: 123123,
-    companyName: "APEX",
-    firstName: "Eshter",
-    lastName: "Smith",
-    phone: "415-123-1234",
-    email: "esther.smith@apex.com",
-    address: {
-        street: "411 Airport Ave",
-        City: "South San Francisco",
-        State: "CA",
-        zipCode: "94080"
-    }
-}
-
-const fakeUser = {
-    _id: 11,
-    companyName: "APEX",
-    firstName: "Eshter",
-    lastName: "Smith",
-    phone: "415-123-1234",
-    email: "esther.smith@apex.com",
-    address: {
-        street: "411 Airport Ave",
-        City: "South San Francisco",
-        State: "CA",
-        zipCode: "94080"
-    }
-}
+const newUserENDPOINT = '/api/users/newUser'
+const loginENDPOINT = '/api/auth/login'
+const checkENDPOINT = '/api/users/checkAvailability'
+const customerENDPOINT = '/api/customers'
+const invoiceENDPOINT = '/api/invoices'
 
 const featureSelections =
 `<div class="featureSelections">
@@ -339,19 +305,24 @@ function catchButtonsClick () {
             userName : $('.logInForm #userName').val(),
             password : $('.logInForm #password').val()
         }
-        fetch(userENDPOINT, {
+        fetch(loginENDPOINT, {
             method: 'POST',
             body: JSON.stringify(userInfo),
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                "Content-Type": "application/json; charset=utf-8"
             }
         })
         .then(response=>{
-            if (response.status === 200) {
+            if (response.ok) {
                 $('.centerBody').html(featureSelections);
                 $('.navigation').removeClass('hidden')
             }
+            throw response.json()
         })
+        .catch(err=>
+            //question!????
+            alert(err)
+        )
     })
     $('.main').on('click', '.newInvoice', event=>{
         event.preventDefault();
@@ -381,12 +352,17 @@ function addNewUser() {
     $('.main').on('change keyup', '.newUserForm1 #newUserName', event=>{
         event.preventDefault();
         if ($(event.currentTarget).val().trim()) {
+            const checkName = {
+                checkAvailability: {
+                    name: "userName",
+                    value: $(event.currentTarget).val()
+                }
+            }
             fetch(checkENDPOINT,{
-                method: "GET",
+                method: "POST",
+                body: JSON.stringify(checkName),
                 headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                    "checkname": "userName",
-                    "checkvalue" : $(event.currentTarget).val(),
+                    "Content-Type": "application/json; charset=utf-8"
                 }
             })
             .then(response=>{
@@ -412,19 +388,23 @@ function addNewUser() {
     $('.main').on('change keyup', '.newUserForm1 #userCompanyName', event=>{
         event.preventDefault();
         if ($(event.currentTarget).val().trim()) {
+            const checkName = {
+                checkAvailability: {
+                    name: "companyName",
+                    value: $(event.currentTarget).val()
+                }
+            }
             fetch(checkENDPOINT,{
-                method: "GET",
+                method: "POST",
+                body: JSON.stringify(checkName),
                 headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                    "checkname": "companyName",
-                    "checkvalue" : $(event.currentTarget).val()
+                    "Content-Type": "application/json; charset=utf-8"
                 }
             })
             .then(response=>{
                 if (response.status === 200) {
                     $('.newUserForm1 .checkCompanyNameAvailbility').prop('hidden', true)
                     $('.newUserForm1 .checkCompanyNameAvailbility').html(`available`)
-                    console.log($('.newUserForm1 #newUserName').val())
                     if ($('.newUserForm1 .checkUserNameAvailbility')[0].hasAttribute('hidden') && $('.newUserForm1 #newUserName').val().trim()) {
                         $('.newUserForm1 .newUserNext').prop('disabled', false)
                     }
@@ -518,6 +498,7 @@ function addNewCustomer() {
             body: JSON.stringify(newCustomerInfo),
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer' + authToken
             }
         })
         .then(response=>{
@@ -635,7 +616,8 @@ function invoiceSubmit() {
             method: "POST",
             body: JSON.stringify(newInvoice),
             headers: {
-                "Content-Type": "application/json; charset=utf-8"
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer' + authToken
             }
         })
         .then(response => {

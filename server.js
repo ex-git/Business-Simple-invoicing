@@ -2,139 +2,96 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const {PORT, DATABASE_URL, TEST_DATABASE_URL} = require("./config");
-const {User, Customer} = require("./models");
 const morgan = require("morgan")
-const bcrypt = require('bcryptjs')
+
+const {authRouter, localStrategy, jwtStrategy } = require('./auth');
+const {usersRouter} = require('./users');
+
+//passport and strategies
+const passport = require('passport');
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 mongoose.Promise = global.Promise;
 
 app.use(express.static("./public"))
 
+//CORS
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+    if (req.method === 'OPTIONS') {
+      return res.send(204);
+    }
+    next();
+});
+
 // using morgan for server log
 app.use(morgan('common'))
 
-//same as bodyParser
-app.use(express.json());
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
 
-app.post("/invoices", (req, res) =>{
-    console.log(req.body)
-    return res.send(req.body)
-} )
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
-app.post("/users", (req, res)=>{
-    if (!(req.body.userName && req.body.password)) {
-        res.status(400).end()
-    }
-    else {
-        User.findOne({"userName": req.body.userName})
-        .then(user=>{
-            if (!user) {
-                return Promise.reject({
-                    reason: 'LoginError',
-                    message: 'Incorrect username or password'
-                });
-            }
-            return user.validatePassword(req.body.password)
-            .then(valid=>{
-                if (!valid) {
-                    return Promise.reject({
-                        reason: 'LoginError',
-                        message: 'Incorrect username or password'
-                    });
-                }
-                res.status(200).end()
-            })
-            .catch(err=>{
-                if (err.reason === 'LoginError') {
-                    res.status(400).send(err.message)
-                }
-            })
-        })
-    }
-})
+// A protected endpoint which needs a valid JWT to access it
+app.get('/api/invoices', jwtAuth, (req, res) => {
+    return res.json({
+      data: 'rosebud'
+    });
+});
 
-app.post("/newUser", (req, res)=>{
-    const requiredFields = ["companyName", "firstName", "lastName", "phoneNumber", "email", "address", "userName", "password"]
-    for (let field of requiredFields) {
-        if (!(field in req.body) || !(req.body[field])) {
-            res.status(400).end()
-        }
-    }
+// A protected endpoint which needs a valid JWT to access it
+app.get('/api/customers', jwtAuth, (req, res) => {
+    return res.json({
+      data: 'rosebud'
+    });
+});
 
-    User.hashPassword(req.body.password)
-    .then(hashPassword=> {
-        User.create({
-            companyName: req.body.companyName || "",
-            userName: req.body.userName,
-            password: hashPassword,
-            firstName : req.body.firstName,
-            lastName: req.body.lastName,
-            phoneNumber: req.body.phoneNumber,
-            email: req.body.email,
-            address: {
-                street: req.body.address.street,
-                city: req.body.address.city,
-                state: req.body.address.state,
-                zipCode: req.body.address.zipCode
-            }
-        })
-    })
-    
-    res.status(201).end()
-})
+//pending
+// app.post("/invoices", (req, res) =>{
+//     console.log(req.body)
+//     return res.send(req.body)
+// } )
 
-//check if user name and company name are already registered
-app.get("/checkAvailability", (req, res)=>{
-    if (req.headers.checkname && req.headers.checkvalue) {
-        User.findOne({[req.headers.checkname] : req.headers.checkvalue})
-        .then(result=> {
-            if (result) {
-                res.status(203).end()
-            }
-            else {
-                res.status(200).end()
-            }
-        })
-    }
-    else {
-        res.status(203).end()
-    }
-    
-})
+//return 404 for non-existing pages
+app.use('*', (req, res) => {
+    return res.status(404).json({ message: 'Not Found' });
+  });
 
-
-app.post("/customers", (req, res)=> {
-    const requiredFields = ["firstName", "lastName", "phoneNumber", "email", "address"]
-    for (let field of requiredFields) {
-        if (!(field in req.body)) {
-            res.status(400).end()
-        }
-        if (!(req.body[field])) {
-            res.status(400).end()
-        }
-    }
-    Customer.findOne({"companyName" :req.body.companyName})
-    .then(function(customer) {
-        if (customer) {
-            res.status(400).json({message: `company "${req.body.companyName}" already exist in system`})
-        }
-        else {
-        Customer.create({
-            companyName: req.body.companyName || "",
-            firstName : req.body.firstName,
-            lastName: req.body.lastName,
-            phoneNumber: req.body.phoneNumber,
-            email: req.body.email,
-            address: {
-                street: req.body.address.street,
-                city: req.body.address.city,
-                state: req.body.address.state,
-                zipCode: req.body.address.zipCode
-            }
-        })
-    res.status(201).send(req.body)
-    }})
-})
+// app.post("/customers", (req, res)=> {
+//     const requiredFields = ["firstName", "lastName", "phoneNumber", "email", "address"]
+//     for (let field of requiredFields) {
+//         if (!(field in req.body)) {
+//             res.status(400).end()
+//         }
+//         if (!(req.body[field])) {
+//             res.status(400).end()
+//         }
+//     }
+//     Customer.findOne({"companyName" :req.body.companyName})
+//     .then(function(customer) {
+//         if (customer) {
+//             res.status(400).json({message: `company "${req.body.companyName}" already exist in system`})
+//         }
+//         else {
+//         Customer.create({
+//             companyName: req.body.companyName || "",
+//             firstName : req.body.firstName,
+//             lastName: req.body.lastName,
+//             phoneNumber: req.body.phoneNumber,
+//             email: req.body.email,
+//             address: {
+//                 street: req.body.address.street,
+//                 city: req.body.address.city,
+//                 state: req.body.address.state,
+//                 zipCode: req.body.address.zipCode
+//             }
+//         })
+//     res.status(201).send(req.body)
+//     }})
+// })
 
 let server;
 
