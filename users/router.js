@@ -34,7 +34,6 @@ usersRouter.post("/newUser", (req, res)=>{
             }
         })
     })
-    
     res.status(201).end()
 })
 
@@ -56,6 +55,7 @@ usersRouter.post("/checkAvailability", (req, res)=>{
         res.status(203).end()
     }
 })
+
 
 module.exports = {usersRouter}
 

@@ -7,20 +7,24 @@ const LocalStrategy = require("passport-local").Strategy;
 const { Strategy: JWTStrategy, ExtractJwt } = require('passport-jwt');
 
 const {JWT_SECRET} = require('../config')
-const {User, Customer} = require("../models");
+const {User} = require("../models");
 
-const localStrategy = new LocalStrategy((userName, password, callback)=>{
+const localStrategy = new LocalStrategy({
+    //added usernameField and passwordField since localStrategy only look for username and password in lowercase in default
+    usernameField: 'userName',
+    passwordField: 'password'
+  }, (username, password, callback)=>{
     let validUser;
-    User.findOne({userName: userName})
+    User.findOne({"userName": username})
     .then(user=>{
         if (!user) {
             return Promise.reject({
                 reason: 'LoginError',
                 message: 'Incorrect username or password'
             })
+        }
         validUser = user;
         return user.validatePassword(password)
-        }
     })
     .then(valid=>{
         if(!valid) {
@@ -38,16 +42,33 @@ const localStrategy = new LocalStrategy((userName, password, callback)=>{
       return callback(err, false);
     });
 });
-  
+
+const cookieExtractor = function(req) {
+    var token = null;
+    if (req && req.cookies) 
+        {
+            token = req.cookies.authToken
+        }
+    return token;
+};
+
 const jwtStrategy = new JWTStrategy({
     secretOrKey: JWT_SECRET,
-    // Look for the JWT as a Bearer auth header
-    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+    // Look for the authToken from cookie
+    jwtFromRequest: cookieExtractor,
     // HS256 tokens - same as the one we issue
     algorithms: ['HS256']
     },
-    (payload, done) => {
-    done(null, payload.user);
+    (jwtPayload, callback) => {
+        //check if jwt expired
+        if (jwtPayload.expires > Date.now()) {
+            return callback('jwt expired');
+          }
+        //return user name
+        User.findOne({"userName": jwtPayload.userName}, {companyName: 1, address:1, userName:1})
+        .then(user=>{
+            callback(null, user);
+        })
     }
 );
 

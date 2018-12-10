@@ -109,14 +109,18 @@ fieldset {
     border: none
 }
 
-.logInForm input, .newUserForm1 input, .newUserForm2 input, .addCustomer input{
+.logInForm input, .newUserForm1 input, .newUserForm2 input, .addCustomer input, .newInvoiceForm input{
     width: 200px;
     height: 20px;
     padding: 5px;
     border: none;
     border-radius: 5px;
 }
-    
+
+.newInvoiceForm input.amount {
+    width: 100px
+}
+
 .logInForm label, .newUserForm1 label, .newUserForm2 label {
     font-size: 1.2em;
 }

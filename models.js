@@ -6,17 +6,17 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
-    companyName: {type: String, require},
-    firstName: {type: String, require},
-    lastName: {type: String, require},
-    password: {type: String, require},
+    companyName: {type: String, required:true},
+    firstName: {type: String, required:true},
+    lastName: {type: String, required:true},
+    password: {type: String, required:true},
     userName: {type: String},
     phoneNumber: {type: String},
     email: {type: String},
     address: {
         street: String,
         city: String,
-        State: String,
+        state: String,
         zipCode: String,
     }
 })
@@ -34,33 +34,35 @@ UserSchema.virtual("fullName").get(function(){
 })
 
 const CustomerSchema = mongoose.Schema({
-    userName: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    companyName: {type: String},
-    firstName: {type: String, require},
-    lastName: {type: String, require},
-    phoneNumber: {type: String},
+    userName: {type: String, required: true},
+    companyName: {type: String, required: true},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    phoneNumber: {type: String, required: true},
     email: {type: String},
     address: {
-        street: String,
-        city: String,
-        State: String,
-        zipCode: String,
+        street: {type: String, required: true},
+        city: {type: String, required: true},
+        state: {type: String, required: true},
+        zipCode: {type: String, required: true}
     }
 })
-
-const invoiceSchema = mongoose.Schema({
-    customer: {type: mongoose.Schema.Types.ObjectId, ref: "customer"},
-    items: [{item: String,
-    charge: Number}]
-})
-
 
 CustomerSchema.virtual("fullName").get(function(){
     return `${this.firstName} ${this.lastName}`.trim();
 })
 
+const InvoiceSchema = mongoose.Schema({
+    customer: {type: String, required: true},
+    invoiceNumber: {type: String, required: true},
+    generateDate: {type: Number, required: true},
+    items: [{item: String,
+        charge: Number}]
+})
+
+
 const User = mongoose.model("User", UserSchema);
 const Customer = mongoose.model("Customer", CustomerSchema)
-const Invoice = mongoose.model("Invoice", invoiceSchema)
+const Invoice = mongoose.model("Invoice", InvoiceSchema)
 
 module.exports = {User, Customer, Invoice};

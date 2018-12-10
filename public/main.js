@@ -5,6 +5,7 @@ const loginENDPOINT = '/api/auth/login'
 const checkENDPOINT = '/api/users/checkAvailability'
 const customerENDPOINT = '/api/customers'
 const invoiceENDPOINT = '/api/invoices'
+const refreshENDPOINT = 'api/auth/refresh'
 
 const featureSelections =
 `<div class="featureSelections">
@@ -21,11 +22,6 @@ const newInvoiceForm =
         <legend>Customer Info</legend>
         <label for="customer">Customer</label>
         <input placeholder="Customer Name" id="customer" list="customersList" required="yes">
-        <datalist id="customersList">
-            <option value="APEC World LLC">APEC World LLC</option>
-            <option value="The Kitchen">The Kitchen</option>
-            <option value="Italian Pizza House">Italian Pizza House</option>
-        </datalist>
         <div class="invoiceTotal">
         </div>
     </fieldset>
@@ -39,7 +35,7 @@ const newInvoiceForm =
             <option value="Kitchen supplies">Kitchen supplies</option>
             <option value="VOIP">Voice over IP serve</option>
             </datalist>
-            <label for="amount1">amount</label>
+            <label for="amount1">$</label>
             <input placeholder="0" class="amount" id="amount1" type="number" step="0.01">
             <button class="remove fas fa-minus"></button>
         </div>
@@ -242,12 +238,6 @@ const invoiceBox = `
                 <table>
                     <tr>
                         <td class="title">
-                            SONY Electronic
-                        </td>
-                        
-                        <td>
-                            Invoice #: 123<br>
-                            Created: January 1, 2015
                         </td>
                     </tr>
                 </table>
@@ -255,23 +245,6 @@ const invoiceBox = `
         </tr>
         
         <tr class="information">
-            <td colspan="2">
-                <table>
-                    <tr>
-                        <td>
-                            Sparksuite, Inc.<br>
-                            12345 Sunny Road<br>
-                            Sunnyville, CA 12345
-                        </td>
-                        
-                        <td>
-                            Acme Corp.<br>
-                            John Doe<br>
-                            john@example.com
-                        </td>
-                    </tr>
-                </table>
-            </td>
         </tr>
         
         <tr class="heading">
@@ -306,6 +279,7 @@ function catchButtonsClick () {
             password : $('.logInForm #password').val()
         }
         fetch(loginENDPOINT, {
+            credentials: 'include',
             method: 'POST',
             body: JSON.stringify(userInfo),
             headers: {
@@ -314,19 +288,38 @@ function catchButtonsClick () {
         })
         .then(response=>{
             if (response.ok) {
-                $('.centerBody').html(featureSelections);
-                $('.navigation').removeClass('hidden')
+                return response.json()
             }
             throw response.json()
         })
+        .then(responseJSON=>{
+            $('.centerBody').html(featureSelections);
+            $('.navigation').removeClass('hidden')
+            //check if user need more than before jwt
+            setTimeout(sessionTimeCheck, 480000)
+            return Promise.resolve()
+        })
         .catch(err=>
-            //question!????
-            alert(err)
+            err.then(msg=>{
+                console.log(msg.message)
+            }  
+            )
         )
     })
     $('.main').on('click', '.newInvoice', event=>{
         event.preventDefault();
         $('.centerBody').html(newInvoiceForm)
+        fetch(customerENDPOINT)
+        .then(response=>{
+            if (response.ok) {
+                return response.json()
+            }
+        })
+        .then(responseJSON=>{
+            console.log(responseJSON.companies)
+            const optionsList = responseJSON.companies.map((company, idx)=>`<option value="${company}">${company} - ${responseJSON.customers[idx]}</option>`).join('')
+            $(`<datalist id="customersList">${optionsList}</datalist>`).insertBefore('.invoiceTotal')
+        })
     })
     $('.main').on('click', '.searchByCriteria', event=>{
         event.preventDefault();
@@ -450,7 +443,7 @@ function addNewUser() {
             address: {
                 street: $('#userStreetAddress').val().trim(),
                 city: $('#userCity').val().trim(),
-                State: $('#userState').val().trim(),
+                state: $('#userState').val().trim(),
                 zipCode: $('#userZipCode').val().trim(),
             }
         }
@@ -489,16 +482,16 @@ function addNewCustomer() {
             address: {
                 street: $('#customerStreetAddress').val(),
                 city: $('#customerCity').val(),
-                State: $('#customerState').val(),
+                state: $('#customerState').val(),
                 zipCode: $('#customerZipCode').val(),
             }
         }
         fetch(customerENDPOINT, {
+            credentials: 'include',
             method: "POST",
             body: JSON.stringify(newCustomerInfo),
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                'Authorization': 'Bearer' + authToken
+                "Content-Type": "application/json; charset=utf-8"
             }
         })
         .then(response=>{
@@ -508,7 +501,7 @@ function addNewCustomer() {
             throw response
         })
         .then(responseJSON=>{
-            console.log(responseJSON)
+            alert("New customer added")
         })
         .catch(err=>err.text().then(errText=>alert(errText)))
 
@@ -531,7 +524,7 @@ function addMoreItem() {
             <option value="Kitchen supplies">Kitchen supplies</option>
             <option value="VOIP">Voice over IP serve</option>
             </datalist>
-            <label for="amount${itemNumber}">amount</label>
+            <label for="amount${itemNumber}">$</label>
             <input placeholder="0" class="amount" id="amount${itemNumber}" type="number" step="0.01">
             <button class="remove fas fa-minus"></button>
          </div>`
@@ -611,13 +604,13 @@ function invoiceSubmit() {
                 items.push(item)
             }
         }
-        newInvoice["items"] = items
+        newInvoice["items"] = items;
         return fetch(invoiceENDPOINT, {
+            credentials: 'include',
             method: "POST",
             body: JSON.stringify(newInvoice),
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                'Authorization': 'Bearer' + authToken
+                "Content-Type": "application/json; charset=utf-8"
             }
         })
         .then(response => {
@@ -625,20 +618,48 @@ function invoiceSubmit() {
                 return response.json()
             } 
         })
-        .then (responseJson => {
+        .then (responseJSON => {
+            console.log(responseJSON)
             $('.top-box').after(`${invoiceBox}`);
-            let totalCharges = 0;
-            for (let item of items) {
-                totalCharges += parseFloat(item["charge"]);
+            //add up the total
+            let totalCharges = responseJSON.invoice.items.map(item=>item.charge).reduce((total, charge)=>total+=charge);
+            for (let item of responseJSON.invoice.items) {
                 $(`<tr class="item">
                 <td>${item["item"]}</td>
                 <td>$${item["charge"]}</td>
                 </tr>`).insertBefore('.total')
             }
+            
+            //conver invoice generate time from unix timestamp to local format 
+            const generteDate = new Date(responseJSON.invoice.generateDate);
+            $('.title').html(responseJSON.user.companyName)
+            $('.title').after(`<td>
+                Invoice #: ${responseJSON.invoice.invoiceNumber}<br>
+                Created: ${generteDate.getMonth()+1}/${generteDate.getDate()}/${generteDate.getFullYear()}
+            </td>`);
             $('.centerBody').html(newInvoiceForm)
             $('head link[type="text/css"]').last().after('<link rel="stylesheet" type="text/css" media="screen,print" href="./invoice.css">')
             $('.total').html(`<td></td>
                 <td>Total: $${totalCharges.toFixed(2)}</td>`)
+            $('.information').html(`
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                ${responseJSON.user.companyName}<br>
+                                ${responseJSON.user.address.street}<br>
+                                ${responseJSON.user.address.city}, ${responseJSON.user.address.state} ${responseJSON.user.address.zipCode}
+                            </td>
+                            <td>
+                                ${responseJSON.customer.companyName}<br>
+                                ${responseJSON.customer.firstName} ${responseJSON.customer.lastName}<br>
+                                ${responseJSON.customer.address.street}<br>
+                                ${responseJSON.customer.address.city}, ${responseJSON.customer.address.state} ${responseJSON.customer.address.zipCode}<br>
+                                ${responseJSON.customer.email}
+                            </td>
+                        </tr>
+                    </table>
+                </td>`)
             $('html, body').animate({scrollTop: $('.invoice-box').offset().top
         }, 1000)
         })
@@ -649,7 +670,37 @@ function editProfile() {
     $('.profile').on('click', event=>{
         event.preventDefault();
         $('.centerBody').html(editProfileForm)
-    } )
+    })
 }
 
+function sessionTimeCheck() {
+    if(confirm("Your login session will be timed out soon, do you need more time?")) {
+        keepJWTfresh()
+    }
+}
+
+function keepJWTfresh() {
+    fetch(refreshENDPOINT, {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    })
+    .then(response=>{
+        if (response.ok) {
+            console.log("ok")
+            setTimeout(sessionTimeCheck, 480000)
+        }
+        else {
+            throw response.json()
+        }
+    })
+    .catch(err=>
+        err.then(msg=>{
+            console.log("error?")
+        }  
+        )
+    )
+}
 $(catchButtonsClick)
