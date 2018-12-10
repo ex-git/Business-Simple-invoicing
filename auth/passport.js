@@ -65,7 +65,7 @@ const jwtStrategy = new JWTStrategy({
             return callback('jwt expired');
           }
         //return user name
-        User.findOne({"userName": jwtPayload.userName}, {companyName: 1, address:1, userName:1})
+        User.findOne({"userName": jwtPayload.userName}, {password: 0})
         .then(user=>{
             callback(null, user);
         })

@@ -109,7 +109,12 @@ fieldset {
     border: none
 }
 
-.logInForm input, .newUserForm1 input, .newUserForm2 input, .addCustomer input, .newInvoiceForm input{
+.logInForm input,
+.newUserForm1 input,
+.newUserForm2 input,
+.addCustomer input,
+.newInvoiceForm input,
+.editProfileForm input {
     width: 200px;
     height: 20px;
     padding: 5px;
@@ -121,10 +126,18 @@ fieldset {
     width: 100px
 }
 
-.logInForm label, .newUserForm1 label, .newUserForm2 label {
+.logInForm label, .newUserForm1 label, .newUserForm2 label, ..editProfileForm label {
     font-size: 1.2em;
 }
-.logInForm label::before, .logInForm label::after, .newUserForm1 label::before,.newUserForm1 label::after, .newUserForm2 label::before,.newUserForm2 label::after {
+.logInForm label::before,
+.logInForm label::after,
+.newUserForm1 label::before,
+.newUserForm1 label::after,
+.newUserForm2 label::before,
+.newUserForm2 label::after,
+.editProfileForm label::before,
+.editProfileForm label::after
+{
     content: " ";
     display: table;
     margin: 2px;
@@ -155,14 +168,14 @@ fieldset {
     cursor: pointer;
 }
 
-.items label[for^='item']::before, .addCustomer label[for^='customer']::before, .search label[for^='search']::before{
+.items label[for^='item']::before, .addCustomer label[for^='customer']::before{
     content: "";
     display: table;
     margin: 2px;
     clear: both
 }
 
-.search label[for^='search'],.editProfileForm label[for^='user'], .addCustomer label[for^='customer'] {
+.search label[for^='search'], .addCustomer label[for^='customer'] {
     min-width: 160px;
     max-width: 280px;
     display: inline-block;
@@ -195,4 +208,8 @@ fieldset {
 
 .passwordForm {
     margin-bottom: 20px
+}
+
+.invoiceTotal {
+    margin: 5px
 }

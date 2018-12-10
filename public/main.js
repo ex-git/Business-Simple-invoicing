@@ -1,6 +1,8 @@
 'use strict'
 
+const userENDPOINT = '/api/users'
 const newUserENDPOINT = '/api/users/newUser'
+const editUserENDPOINT = 'api/users/editUser'
 const loginENDPOINT = '/api/auth/login'
 const checkENDPOINT = '/api/users/checkAvailability'
 const customerENDPOINT = '/api/customers'
@@ -22,22 +24,22 @@ const newInvoiceForm =
         <legend>Customer Info</legend>
         <label for="customer">Customer</label>
         <input placeholder="Customer Name" id="customer" list="customersList" required="yes">
-        <div class="invoiceTotal">
-        </div>
     </fieldset>
     <fieldset class="items">
         <legend>Items/Services</legend>
         <div id="item1">
-            <label for="item1">Item 1</label>
-            <input placeholder="What to charge?" id="item1" class="item" list="itemsList" type="text">
+            <label for="item1">Item</label>
+            <input placeholder="What to charge?" required id="item1" class="item" list="itemsList" type="text">
             <datalist id="itemsList">
             <option value="Office supplies">Office supplies</option>
             <option value="Kitchen supplies">Kitchen supplies</option>
             <option value="VOIP">Voice over IP serve</option>
             </datalist>
             <label for="amount1">$</label>
-            <input placeholder="0" class="amount" id="amount1" type="number" step="0.01">
+            <input placeholder="0" required class="amount" id="amount1" type="number" step="0.01">
             <button class="remove fas fa-minus"></button>
+        </div>
+        <div class="invoiceTotal">
         </div>
         <button class="addMoreItem fas fa-plus"></button>
         <datalist id="itemsList">
@@ -80,31 +82,31 @@ const addCustomerForm = `
 <fieldset>
     <legend>Add New Customer</legend>
     <label for="customerCompanyName">Company Name</label>
-    <input type="text" id="customerCompanyName" placeholder="Amazon Inc">
+    <input type="text" id="customerCompanyName" placeholder="example: The Best Inc">
     <br>
     <label for="customerFirstName">First Name</label>
-    <input type="text" id="customerFirstName" required placeholder="John" pattern="[a-zA-Z ]{2,}$">
+    <input type="text" id="customerFirstName" required placeholder="example: John" pattern="[a-zA-Z ]{2,}$">
     <br>
     <label for="customerLastName">Last Name</label>
-    <input type="text" id="customerLastName" required placeholder="William" pattern="[a-zA-Z ]{2,}$">
+    <input type="text" id="customerLastName" required placeholder="example: William" pattern="[a-zA-Z ]{2,}$">
     <br>
     <label for="customerStreetAddress">Street</label>
-    <input type="text" id="customerStreetAddress" required placeholder="222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
+    <input type="text" id="customerStreetAddress" required placeholder="example: 123 Amazing Dr" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
     <br>
     <label for="customerCity">City</label>
-    <input type="text" id="customerCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
+    <input type="text" id="customerCity" pattern="[a-zA-Z ]{2,}$" required placeholder="example: San Francisco">
     <br>
     <label for="customerState">State</label>
-    <input type="text" id="customerState" required placeholder="California" pattern="[a-zA-Z ]{2}$">
+    <input type="text" id="customerState" required placeholder="example: CA" pattern="[a-zA-Z ]{2}$">
     <br>
     <label for="customerZipCode">Zip Code</label>
-    <input required pattern="[0-9]{5}" id="customerZipCode" placeholder="" title="input 5 digit zip code">
+    <input required pattern="[0-9]{5}" id="customerZipCode" placeholder="example: 94112" title="input 5 digit zip code">
     <br>
     <label for="customerPhoneNumber">Phone Number</label>
-    <input type="tel" id="customerPhoneNumber" placeholder="6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
+    <input type="tel" id="customerPhoneNumber" placeholder="example: 6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
     <br>
     <label for="customerEmail">Email Address</label>
-    <input type="email" id="customerEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="jph.william@amazon.com">
+    <input type="email" id="customerEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="example: jph.william@thebest.com">
     <br>
     <button type="submit" class="button submitNewCustomer fa">Submit &#xf2bb;
     </button>
@@ -116,45 +118,50 @@ const editProfileForm = `
 <form class="editProfileForm">
     <fieldset>
         <legend>Edit Your Profile</legend>
-        <label for="userOldPassword">Current Password</label>
-        <input type="password" required id="userOldPassword" placeholder="">
-        <br>
-        <br>
-        <label for="userPassword1">Password</label>
-        <input type="password" id="userPassword1" class="newPassword" placeholder="">
-        <br>
-        <label for="userPassword2">Re-enter password</label>
-        <input type="password" id="userPassword2" class="newPassword" placeholder="">
-        <br>
-        <br>
-        <label for="userCompanyName">Company Name</label>
-        <input type="text" id="custouserCompanyNamemerCompanyName" placeholder="Amazon Inc">
-        <br>
-        <label for="userFirstName">First Name</label>
-        <input type="text" id="userFirstName" required placeholder="John" pattern="[a-zA-Z ]{2,}$">
-        <br>
-        <label for="userLastName">Last Name</label>
-        <input type="text" id="userLastName" required placeholder="William" pattern="[a-zA-Z ]{2,}$">
-        <br>
-        <label for="userStreetAddress">Street</label>
-        <input type="text" id="customerStreetAddress" required placeholder="222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
-        <br>
-        <label for="userCity">City</label>
-        <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
-        <br>
-        <label for="userState">State</label>
-        <input type="text" id="userState" required placeholder="California" pattern="[a-zA-Z]{2}$" title="Two letter codes only">
-        <br>
-        <label for="userZipCode">Zip Code</label>
-        <input type="number" required pattern="[0-9]{5}" id="userZipCode" placeholder="94111" title="5 digit zip code only">
-        <br>
-        <label for="userPhoneNumber">Phone Number</label>
-        <input type="tel" id="userPhoneNumber" placeholder="6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
-        <br>
-        <label for="userEmail">Email Address</label>
-        <input type="email" id="userEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="jph.william@amazon.com">
-        <br>
-        <button class="button fa">Update &#xf058;
+        <div class="seperateForm">
+            <div class="passwordForm">
+                <div class="leftForm">
+                    <label for="userPassword1">New password</label>
+                    <input type="password" id="userPassword1" class="newPassword" placeholder="">
+                    <br>
+                </div>
+                <div class="rightForm">
+                    <label for="userPassword2">Re-enter password</label>
+                    <input type="password" id="userPassword2" class="newPassword" placeholder="">
+                    <br>
+                </div>
+            </div>
+            <div class="passwordCheck iconFont" hidden></div>
+            <div class="leftForm">
+                <label for="userFirstName">First Name</label>
+                <input type="text" id="userFirstName" required placeholder="John" pattern="[a-zA-Z ]{2,}$">
+                <br>
+                <label for="userLastName">Last Name</label>
+                <input type="text" id="userLastName" required placeholder="William" pattern="[a-zA-Z ]{2,}$">
+                <br>
+                <label for="userPhoneNumber">Phone Number</label>
+                <input type="tel" id="userPhoneNumber" placeholder="6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
+                <br>
+                <label for="userEmail">Email Address</label>
+                <input type="email" id="userEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="jph.william@amazon.com">
+                <br>
+            </div>
+            <div class="rightForm">
+                <label for="userStreetAddress">Street</label>
+                <input type="text" id="userStreetAddress" required placeholder="222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
+                <br>
+                <label for="userCity">City</label>
+                <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
+                <br>
+                <label for="userState">State</label>
+                <input type="text" id="userState" required placeholder="CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
+                <br>
+                <label for="userZipCode">Zip Code</label>
+                <input required pattern="[0-9]{5}" id="userZipCode" placeholder="94111" title="input 5 digit zip code only">
+                <br>
+            </div>
+        </div>
+        <button type="submit" class="button fa">Update &#xf058;
         </button>
         <button class="cancel">Cancel</button>
     </fieldset>
@@ -193,7 +200,7 @@ const newUserFormPart2 = `
                     <input type="password" id="userPassword2" class="newPassword">
                     <br>
                 </div>
-                <div class="passwordCheck iconFont" hidden>&#xf071 Both password must match</div>
+                <div class="passwordCheck iconFont" hidden></div>
             </div>
             <div class="leftForm">
                 <label for="userFirstName">First Name</label>
@@ -217,7 +224,7 @@ const newUserFormPart2 = `
                 <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
                 <br>
                 <label for="userState">State</label>
-                <input type="text" id="userState" required placeholder="California" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
+                <input type="text" id="userState" required placeholder="CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
                 <br>
                 <label for="userZipCode">Zip Code</label>
                 <input required pattern="[0-9]{5}" id="userZipCode" placeholder="94111" title="input 5 digit zip code only">
@@ -338,9 +345,30 @@ function catchButtonsClick () {
     cancelButton();
     trackChanges();
     addNewCustomer();
-    addNewUser()
+    addNewUser();
+    passwordCheck();
+    updateProfile()
 }
 
+//check if password start with space or if user input incorrect password
+function passwordCheck(){
+    $('.main').on('keyup change', '.newPassword', event=>{
+        if ($('#userPassword1').val().trim() !== $('#userPassword1').val() || $('#userPassword2').val().trim() !== $('#userPassword2').val()) {
+            $('.passwordCheck').prop('hidden', false)
+            $('.passwordCheck').html(`&#xf071 Password can't start or end with space`)
+            $('.button').prop('disabled', true)
+        }
+        else if ($('#userPassword1').val() !== $('#userPassword2').val()) {
+            $('.passwordCheck').prop('hidden', false)
+            $('.passwordCheck').html(`&#xf071 Both password must match`)
+            $('.button').prop('disabled', true)
+        }
+        else {
+            $('.passwordCheck').prop('hidden', true)
+            $('.button').prop('disabled', false)
+        }
+    })
+}
 function addNewUser() {
     $('.main').on('change keyup', '.newUserForm1 #newUserName', event=>{
         event.preventDefault();
@@ -422,14 +450,6 @@ function addNewUser() {
         $('.newUserForm1 .newUserNext').prop('disabled', true)
         $('.centerBody').append(newUserFormPart2)
     })
-    $('.main').on('keyup change', '.newPassword', event=>{
-        if ($('.newUserForm2 #userPassword1').val() !== $('.newUserForm2 #userPassword2').val()) {
-            $('.passwordCheck').prop('hidden', false)
-        }
-        else {
-            $('.passwordCheck').prop('hidden', true)
-        }
-    })
     $('.main').on('submit', '.newUserForm2', event=>{
         event.preventDefault();
         const newUserInfo = {
@@ -469,6 +489,42 @@ function addNewUser() {
     })
 }
 
+function updateProfile() {
+    $('.main').on('submit', '.editProfileForm', event=>{
+        event.preventDefault();
+        const userInfo = {
+            firstName: $('#userFirstName').val().trim(),
+            lastName: $('#userLastName').val().trim(),
+            password: $('#userPassword1').val().trim(),
+            phoneNumber: $('#userPhoneNumber').val().trim(),
+            email: $('#userEmail').val().trim(),
+            address: {
+                street: $('#userStreetAddress').val().trim(),
+                city: $('#userCity').val().trim(),
+                state: $('#userState').val().trim(),
+                zipCode: $('#userZipCode').val().trim(),
+            }
+        }
+        fetch(editUserENDPOINT, {
+            credentials: 'include',
+            method: "PUT",
+            body: JSON.stringify(userInfo),
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            }
+        })
+        .then(response=>{
+            if (response.ok) {
+                alert("You profile had been updated, please re-login with your user name and password");
+                window.location.assign('/')
+            }
+            else {
+                console.log(response)
+                alert("Something is not right, please try again")
+            }
+        })
+    })
+}
 
 function addNewCustomer() {
     $('.main').on('submit', '.addCustomer', event=>{
@@ -517,18 +573,18 @@ function addMoreItem() {
         itemNumber +=1;
         const addMore = `
         <div id="item${itemNumber}">
-            <label for="item${itemNumber}">Item ${itemNumber}</label>
-            <input placeholder="What to charge?" class="item" id="item${itemNumber}" list="itemsList${itemNumber}">
+            <label for="item${itemNumber}">Item</label>
+            <input placeholder="What to charge?" class="item" required id="item${itemNumber}" list="itemsList${itemNumber}">
             <datalist id="itemsList${itemNumber}">
             <option value="Office supplies">Office supplies</option>
             <option value="Kitchen supplies">Kitchen supplies</option>
             <option value="VOIP">Voice over IP serve</option>
             </datalist>
             <label for="amount${itemNumber}">$</label>
-            <input placeholder="0" class="amount" id="amount${itemNumber}" type="number" step="0.01">
+            <input placeholder="0" class="amount" required id="amount${itemNumber}" type="number" step="0.01" >
             <button class="remove fas fa-minus"></button>
          </div>`
-        $(addMore).insertBefore('.addMoreItem')
+        $(addMore).insertBefore('.invoiceTotal')
     }
 )}
 
@@ -540,7 +596,7 @@ function addTotal(){
                 total +=parseFloat($(this).val())
             }
         })
-        $('.invoiceTotal').html(`Total ${total.toFixed(2)}`)
+        $('.invoiceTotal').html(`Total $${total.toFixed(2)}`)
     }
     $('.main').on('change', '.amount', event=>{
         updatTotal()
@@ -670,6 +726,22 @@ function editProfile() {
     $('.profile').on('click', event=>{
         event.preventDefault();
         $('.centerBody').html(editProfileForm)
+        fetch(userENDPOINT)
+        .then(response=>{
+            if (response.ok) {
+                return response.json()
+            }
+        })
+        .then(responseJSON=>{
+            $('#userFirstName').val(responseJSON.firstName);
+            $('#userLastName').val(responseJSON.lastName)
+            $('#userPhoneNumber').val(responseJSON.phoneNumber)
+            $('#userEmail').val(responseJSON.email)
+            $('#userStreetAddress').val(responseJSON.address.street)
+            $('#userCity').val(responseJSON.address.city)
+            $('#userState').val(responseJSON.address.state)
+            $('#userZipCode').val(responseJSON.address.zipCode)
+        })
     })
 }
 
@@ -689,7 +761,7 @@ function keepJWTfresh() {
     })
     .then(response=>{
         if (response.ok) {
-            console.log("ok")
+            console.log("updated jwt")
             setTimeout(sessionTimeCheck, 480000)
         }
         else {
