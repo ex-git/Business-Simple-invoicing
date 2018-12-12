@@ -20,9 +20,7 @@ app.use(cookieParser())
 
 mongoose.Promise = global.Promise;
 
-app.use(express.static("./public",{setHeaders: function (res, path, stat) {
-    res.cookie('authToken', "", {maxAge: -1, httpOnly: true, sameSite: "lax"})
-  }}))
+app.use(express.static("./public"))
 
 //CORS
 app.use(function (req, res, next) {

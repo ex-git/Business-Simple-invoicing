@@ -122,11 +122,17 @@ fieldset {
     border-radius: 5px;
 }
 
+.newInvoiceForm select {
+    width: 200px;
+    height: 30px
+
+}
+
 .newInvoiceForm input.amount {
     width: 100px
 }
 
-.logInForm label, .newUserForm1 label, .newUserForm2 label, ..editProfileForm label {
+.logInForm label, .newUserForm1 label, .newUserForm2 label, .editProfileForm label {
     font-size: 1.2em;
 }
 .logInForm label::before,
@@ -164,7 +170,7 @@ fieldset {
     min-height: 100%;
 }
 
-.profile {
+.profile, .logOut {
     cursor: pointer;
 }
 
@@ -212,4 +218,27 @@ fieldset {
 
 .invoiceTotal {
     margin: 5px
+}
+
+.searchResult {
+    min-height: 100%
+}
+.searchResult, .actionButton {
+    max-width:680px;
+    margin: 50px auto;
+    text-align: center
+}
+
+.searchResult td{
+    min-width: 140px;
+    height: 30px;
+    text-align: center
+}
+
+.searchResult td[class^='invoice'] {
+    font-size: 1.2em
+}
+
+.searchResult button {
+    width: 150px;
 }

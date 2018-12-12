@@ -31,11 +31,20 @@ authRouter.post('/login', localAuth, (req, res) => {
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
-// The user exchanges a valid JWT for a new one with a later expiration
+// User exchanges a valid JWT for a new one with a later expiration
 authRouter.post('/refresh', jwtAuth, (req, res) => {
-  const authToken = createAuthToken(req.user);
-  //send back cookie with 10 mins life with JWT
-  res.status(200).cookie('authToken', authToken, {maxAge: 600000, httpOnly: true, sameSite: "lax"}).json({validUser: validUser})
+    const validUser = {address: req.user.address,
+        companyName: req.user.companyName}
+    const authToken = createAuthToken(req.user.userName);
+    //send back cookie with 10 mins life with JWT
+    res.status(200).cookie('authToken', authToken, {maxAge: 600000, httpOnly: true, sameSite: "lax"}).json({validUser: validUser})
 });
+
+// seng invalid JWT for logout
+authRouter.get('/logOut', jwtAuth, (req, res) => {
+    //set cookie to expire immediately
+    res.status(200).cookie('authToken', '', {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+})
+
 
 module.exports = {authRouter};

@@ -29,10 +29,10 @@ customerRouter.post("/", jwtAuth, (req, res)=>{
         }
     }
     const customerFullName = `${req.body.firstName} ${req.body.lastName}`;
-    Customer.findOne({$or: [{phoneNumber: req.body.phoneNumber}, {email: req.body.email}, {companyName: req.body.companyName}]})
+    Customer.findOne({companyName: req.body.companyName, userName: req.user.userName, firstName: req.body.firstName, lastName: req.body.lastName})
     .then(customer => {
-        if (customer && customer.fullName === customerFullName) {
-            res.status(400).json({message: `Customer "${customerFullName}" already exist in system`})
+        if (customer) {
+            res.status(400).json({message: `Customer "${customerFullName}" with "${req.body.companyName}" already exist in system`})
         }
         else {
         const newCustomer = {

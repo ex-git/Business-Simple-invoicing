@@ -50,7 +50,7 @@ usersRouter.get("/", jwtAuth, (req, res)=>{
 usersRouter.put("/editUser", jwtAuth, (req, res)=>{
     const requiredFields = ["firstName", "lastName", "phoneNumber", "email", "address", "password"]
     for (let field of requiredFields) {
-        if (!(field in req.body) || !(req.body[field])) {
+        if (!(field in req.body)) {
             res.status(400).end()
         }
     }
@@ -71,37 +71,40 @@ usersRouter.put("/editUser", jwtAuth, (req, res)=>{
                 }
             }
             })
+            .then(user=>{
+                //set cookie with JWT to expire 
+                res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+            })
             .catch(
-                err=>{console.info(err)}
+                err=>{
+                    res.status(400).end()
+                }
             )
         })
     }
-    // not working!!!!!!
     else if(req.body.password === "") {
-        User.findOneAndUpdate({userName:req.user.userName}, {$set: {
-            firstName : req.body.firstName,
-            lastName: req.body.lastName,
-            phoneNumber: req.body.phoneNumber,
-            email: req.body.email,
-            address: {
-                street: req.body.address.street,
-                city: req.body.address.city,
-                state: req.body.address.state,
-                zipCode: req.body.address.zipCode
-            }
-        }}, function(err, ok) {
-            if(err){
-                console.info(err)
-               res.status(400).end()
-            }
-            else{
-                console.info(ok);
-            }
-        })
+        User.findByIdAndUpdate(req.user._id, {$set: {
+                firstName : req.body.firstName,
+                lastName: req.body.lastName,
+                phoneNumber: req.body.phoneNumber,
+                email: req.body.email,
+                address: {
+                    street: req.body.address.street,
+                    city: req.body.address.city,
+                    state: req.body.address.state,
+                    zipCode: req.body.address.zipCode
+                }
+            }})
+            .then(user=>{
+                //set cookie with JWT to expire 
+                res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+            })
+            .catch(
+                err=>{
+                    res.status(400).end()
+                }
+            )
     }
-    
-    //set cookie with JWT to expire 
-    res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
 })
 
 //check if user name and company name are already registered

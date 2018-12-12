@@ -58,9 +58,10 @@ CustomerSchema.virtual("fullName").get(function(){
 })
 
 const InvoiceSchema = mongoose.Schema({
+    userName: {type: String, required: true},
     customer: {type: String, required: true},
     invoiceNumber: {type: String, required: true},
-    generateDate: {type: Number, required: true},
+    generateDate: {type: String, required: true},
     items: [{item: String,
         charge: Number}]
 })
