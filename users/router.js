@@ -3,7 +3,7 @@
 const express = require('express');
 const usersRouter = express.Router();
 
-const {User} = require('../models')
+const {User, Customer, Invoice} = require('../models')
 
 //same as bodyParser
 usersRouter.use(express.json())
@@ -126,6 +126,18 @@ usersRouter.post("/checkAvailability", (req, res)=>{
     }
 })
 
+//Delete user and all data
+usersRouter.delete("/deleteMe", jwtAuth, (req, res)=>{
+    let user = req.user.userName
+    User.deleteMany({userName: user})
+        .then(()=>{
+            return Invoice.deleteMany({userName: user})}
+        )
+        .then(()=>{
+            return Customer.deleteMany({userName: user})}
+        )
+        .then(res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end())
+})
 
 module.exports = {usersRouter}
 

@@ -1,0 +1,27 @@
+@media screen and (max-width: 450px) {
+    .newInvoiceForm input.amount {
+        width: unset
+    }
+
+    .newInvoiceForm label[for^='amount']::before {
+        content: " ";
+        display: table;
+        margin: 2px;
+        clear: both
+    }
+} 
+
+@media screen and (max-width: 500px) {
+    .centerBody {
+        margin-top: 35%;
+    }
+    .mainPageGreeting h2 {
+        margin-bottom: 20px
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .mainHeader {
+        display: none
+    }
+}

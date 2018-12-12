@@ -18,6 +18,9 @@ customerRouter.get("/", jwtAuth, (req, res)=>{
             const customerName = customers.map(customer=>customer.fullName)
             res.status(200).json({companies: companyName, customers: customerName})
         }
+        else {
+            res.status(404).json({message: "No customer found"})
+        }
     })
 })
 

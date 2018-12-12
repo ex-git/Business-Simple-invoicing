@@ -68,24 +68,25 @@ invoiceRouter.put("/", jwtAuth, (req, res)=>{
             res.status(400).json({message: `"${field}" is missing`})
         }
     }
-    Invoice.findOneAndUpdate({'invoiceNumber': req.body.invoiceNumber}, {$set:{
-        userName: req.user.userName,
-        customer: req.body.customer,
-        invoiceNumber: req.body.invoiceNumber,
-        generateDate: req.body.generateDate,
-        items: req.body.items
-    }}, (err,invoice)=>{
-            if (err) {
-                res.status(400).json({message: `something wrong`})
+    Customer.findOne({'userName': req.user.userName, 'companyName': req.body.customer})
+    .then(customer=>{
+        Invoice.findOneAndUpdate({'invoiceNumber': req.body.invoiceNumber}, {$set:{
+            userName: req.user.userName,
+            customer: req.body.customer,
+            invoiceNumber: req.body.invoiceNumber,
+            generateDate: req.body.generateDate,
+            items: req.body.items
+            }}, {new: true},(err,invoice)=>{
+                if (err) {
+                    res.status(400).json({message: `something wrong`})
+                }
+                else {
+                    res.status(201).json({"message": `invoice created`, "invoices": [invoice], "user": req.user, "customer": customer})
+                }
             }
-            else {
-                res.status(201).json({"message": `invoice updated`, "invoices": [invoice], "user": req.user,})
-            }
-        })
-    }
-)
-
-
+        )
+    })    
+})
 
 invoiceRouter.delete("/*", jwtAuth, (req, res)=>{
     const queryName = Object.keys(req.query)[0]

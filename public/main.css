@@ -22,11 +22,11 @@ html {
 }
 
 h1 {
-    font-size: 1.5em
+    font-size: 1.2em
 }
 
 h2 {
-    font-size: 2em;
+    font-size: 1.1em;
 }
 section {
     width: 94%;
@@ -43,7 +43,7 @@ body {
     font-size: 1.2em;
     position: relative;
     background-image: linear-gradient(to top, rgba(17,17,17,0.8), rgba(17,17,17,0.5)),url("./main-background.jpeg");
-    height: 100%;
+    min-height: 100%;
     background-size:cover;
     padding-top: 10px;
     color: #fff;
@@ -67,6 +67,10 @@ li {
     margin-left: 5px
 }
 
+legend {
+    font-size: 1.1em
+}
+
 .hidden {
     display: none;
 }
@@ -74,14 +78,14 @@ li {
 .centerBody {
     margin: auto;
     position: relative;
-    top:35%;
+    margin-top: 12%;
     left: 0;
     right:0;
     text-align: center
 }
 
 .button {
-    margin: 2%;
+    margin: 2% auto 0 auto;
     height: 80px;
     width: 200px;
     font-size: 1.2em;
@@ -114,6 +118,7 @@ fieldset {
 .newUserForm2 input,
 .addCustomer input,
 .newInvoiceForm input,
+.searchInvoice input,
 .editProfileForm input {
     width: 200px;
     height: 20px;
@@ -124,8 +129,19 @@ fieldset {
 
 .newInvoiceForm select {
     width: 200px;
-    height: 30px
+    height: 30px;
+    background-color: #fff
+}
+.searchCriteria {
+    text-align:right;
+    width: 200px;
+    margin: 20px auto
+}
 
+.searchInvoice input[type="radio"] {
+    width:20px;
+    margin-left: 5px;
+    vertical-align: middle
 }
 
 .newInvoiceForm input.amount {
@@ -170,8 +186,13 @@ fieldset {
     min-height: 100%;
 }
 
-.profile, .logOut {
+.home, .profile, .logOut {
     cursor: pointer;
+    margin: 5px
+}
+
+.home:hover, .profile:hover, .logOut:hover {
+    text-decoration: underline
 }
 
 .items label[for^='item']::before, .addCustomer label[for^='customer']::before{
@@ -193,12 +214,41 @@ fieldset {
 }
 
 .cancel {
-    border: none;
-    background: none;
     color: #fff;
     font-size: 0.8em;
     bottom: 100px;
-    position: absolute
+    width: 200px;
+    height: 30px;
+    margin: 10px auto;
+    background-color: #10299c;
+    border-radius: 7px;
+    border: none;
+    display: block;
+    cursor: pointer;
+    transition: background-color 2s
+}
+
+.cancel:hover {
+    background-color: red;
+}
+
+.deleteMe {
+    color: #fff;
+    font-size: 0.8em;
+    bottom: 100px;
+    width: 200px;
+    height: 30px;
+    margin: 10px auto;
+    background-color: red;
+    border-radius: 7px;
+    border: none;
+    display: block;
+    cursor: pointer;
+    transition: background-color 2s
+}
+
+.deleteMe:hover {
+    background-color: #000;
 }
 
 .iconFont {
@@ -213,7 +263,11 @@ fieldset {
 }
 
 .passwordForm {
-    margin-bottom: 20px
+    margin-bottom: 10px
+}
+
+.newPassword {
+    background-color:lightgray;
 }
 
 .invoiceTotal {
@@ -225,8 +279,9 @@ fieldset {
 }
 .searchResult, .actionButton {
     max-width:680px;
-    margin: 50px auto;
-    text-align: center
+    margin: 20px auto;
+    text-align: center;
+    overflow: scroll
 }
 
 .searchResult td{

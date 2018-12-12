@@ -9,6 +9,7 @@ const customerENDPOINT = '/api/customers'
 const invoiceENDPOINT = '/api/invoices'
 const refreshENDPOINT = 'api/auth/refresh'
 const logOutENDPOINT = 'api/auth/logOut'
+const deleteMeENDPOINT = 'api/users/deleteMe'
 
 const featureSelections =
 `<div class="featureSelections">
@@ -49,20 +50,21 @@ const newInvoiceForm =
 const searchForm = `
 <form class="searchInvoice">
     <fieldset>
-        <legend>Search</legend>
-        <label for="searchInvoiceNumber">Invoice Number</label>
-        <input type="radio" id="searchInvoiceNumber" name="criteria" value="searchInvoiceNumber">
+        <legend>Search Invoices</legend>
+        <div class="searchCriteria">
+            <label for="searchInvoiceNumber">Invoice Number</label>
+            <input type="radio" id="searchInvoiceNumber" name="criteria" value="searchInvoiceNumber" selected="selected">
+            <br>
+            <label for="searchInvoiceDate">Invoice Date</label>
+            <input type="radio" id="searchInvoiceDate" name="criteria" value="searchInvoiceDate" title="Date format: MM/DD/YYYY)">
+            <br>
+            <label for="searchCustomerCompanyName">Company Name</label>
+            <input type="radio" id="searchCustomerCompanyName" name="criteria" value="searchCustomerCompanyName">
+            <br>
+        </div>
+        <label for="keyword">Keyword</label>
         <br>
-        <label for="searchInvoiceDate">Invoice Date</label>
-        <input type="radio" id="searchInvoiceDate" name="criteria" value="searchInvoiceDate">
-        <br>
-        <label for="searchCustomerCompanyName">Company Name</label>
-        <input type="radio" id="searchCustomerCompanyName" name="criteria" value="searchCustomerCompanyName">
-        <br>
-        <label for="keyword">Search keyword</label>
-        <br>
-        <input id="keyword" placeholder="" list="customersList">
-        <datalist id="customersList"></datalist>
+        <input id="keyword" placeholder="" type="text">
         <br>
         <button type="submit" class="button search fa">Find &#xf002;
         </button>
@@ -115,12 +117,12 @@ const editProfileForm = `
             <div class="passwordForm">
                 <div class="leftForm">
                     <label for="userPassword1">New password</label>
-                    <input type="password" id="userPassword1" class="newPassword" placeholder="">
+                    <input type="password" id="userPassword1" class="newPassword" placeholder="************" title="Leave blank if you don't want to change">
                     <br>
                 </div>
                 <div class="rightForm">
                     <label for="userPassword2">Re-enter password</label>
-                    <input type="password" id="userPassword2" class="newPassword" placeholder="">
+                    <input type="password" id="userPassword2" class="newPassword" placeholder="************" title="Leave blank if you don't want to change">
                     <br>
                 </div>
             </div>
@@ -157,6 +159,7 @@ const editProfileForm = `
         <button type="submit" class="button fa">Update &#xf058;
         </button>
         <button class="cancel">Cancel</button>
+        <button class="deleteMe">Delete me</button>
     </fieldset>
 </form>`
 
@@ -224,7 +227,6 @@ const newUserFormPart2 = `
             </div>
         </div>
         <button type="submit" class="button submitNewUser fa">Submit &#xf234;</button>
-        <button class="cancel">Cancel</button>
     </fieldset>
 </form>`
 
@@ -232,13 +234,11 @@ function catchButtonsClick () {
     $('.main').on('click', '.mainPageRegister', event=>{
         event.preventDefault();
         $('.mainPageGreeting').prop('hidden', true);
-        $('.mainHeader').addClass('hidden')
         $('.centerBody').append(newUserFormPart1)
     })
     $('.main').on('click', '.mainPageLogin', event=>{
         event.preventDefault();
         $('.mainPageGreeting').prop('hidden', true);
-        $('.mainHeader').addClass('hidden')
         $('.logInForm').prop('hidden', false)
         $('.logInForm fieldset').prop('disabled', false)
     })
@@ -279,15 +279,21 @@ function catchButtonsClick () {
     $('.main').on('click', '.newInvoice', event=>{
         event.preventDefault();
         $('.centerBody').html(newInvoiceForm)
+        $('.top-box').css("height",'unset')
         fetch(customerENDPOINT)
         .then(response=>{
             if (response.ok) {
                 return response.json()
             }
+            throw new Error("You must have at least one customer added before creating new invoice")
         })
         .then(responseJSON=>{
             const optionsList = responseJSON.companies.map((company, idx)=>`<option value="${company}">${company} - ${responseJSON.customers[idx]}</option>`).join('')
             $('#customer').html(optionsList)
+        })
+        .catch(err=>{
+            $('.centerBody').html(addCustomerForm)
+            alert(err.message)
         })
         //keep JWT fresh
         keepJWTfresh()
@@ -297,20 +303,6 @@ function catchButtonsClick () {
         event.preventDefault();
         $('.centerBody').html(searchForm);
         searchInvoices()
-        fetch(customerENDPOINT)
-                .then(response=>{
-                    if (response.ok) {
-                        return response.json()
-                    }
-                    else {
-                        //do nothing
-                        return Promise.resolve()
-                    }
-                })
-                .then(responseJSON=>{
-                    const optionsList = responseJSON.companies.map((company, idx)=>`<option value="${company}">${company} - ${responseJSON.customers[idx]}</option>`).join('')
-                    $('#customersList').html(optionsList)
-                })
     })
 
     $('.main').on('click', '.newCustomer', event=>{
@@ -323,12 +315,14 @@ function catchButtonsClick () {
     addTotal();
     editProfile();
     cancelButton();
+    homeButton();
     trackChanges();
     addNewCustomer();
     addNewUser();
     passwordCheck();
     updateProfile();
-    logOut()
+    logOut();
+    deleteMe()
 }
 
 //check if password start with space or if user input incorrect password
@@ -361,6 +355,7 @@ function searchInvoices() {
         const selected = $('input[name="criteria"]:checked').val()
         const keyword = $('#keyword').val()
         const newQuery = {}
+        
         if (selected === "searchInvoiceNumber") {
             newQuery.invoiceNumber = keyword
         }
@@ -370,184 +365,206 @@ function searchInvoices() {
         else if (selected === "searchCustomerCompanyName") {
             newQuery.customer = keyword
         }
-        const formattedQuery = formatQuery(newQuery)
-        fetch(invoiceENDPOINT+"?"+formattedQuery, {
-            credentials: 'include',
-            method: 'GET'
-        })
-        .then(response=>{
-            if (response.ok) {
-                return response.json()
-            }
-            throw response.json()
-        })
-        .then(responseJSON=>{
-            if (responseJSON.invoices.length >0) {
-                const searchResult = responseJSON.invoices.map(invoice=>`<tr class="invoice">
-                        <td>${invoice.customer}</td>
-                        <td>${invoice.generateDate}</td>
-                        <td>${invoice.invoiceNumber}</td>
-                        <td>$${invoice.items.map(item=>item.charge).reduce((total, charge)=>total+=charge).toFixed(2)}</td>
-                        <td><label for="${invoice.invoiceNumber}">Select this</label>
-                        <input type="radio" id="${invoice.invoiceNumber}" name="selected" value="${invoice.invoiceNumber}"></td>
-                    </tr>`
-                )
-                const resultRegion = `<section role="region" class="searchResult">
-                            <h2>Search result:</h2>
-                            <div class="results-box">
-                                <table cellpadding="0" cellspacing="0">
-                                <tr class="heading">
-                                        <td class="invoiceCustomerName">Customer Name</td>
-                                        <td class="invoiceDate">Invoice Date</td>
-                                        <td class="invoiceNumber">Invoice Number</td>
-                                        <td class="invoiceTotal">Invoice Total (USD)</td>
-                                        <td class="invoiceSelectBox">Action:</td>
-                                </tr>
-                                <tbody>
-                                    ${searchResult.join('')}
-                                </tbody>
-                                </table>
-                            </div>
-                            <div class="actionButton">
-                            <button class="button fa openInvoice">View &#xf35d</button>
-                            <button class="button fa editInvoice">Edit &#xf044</button>
-                            <button class="button fa deleteInvoice">Delete &#xf2ed</button>
-                </section>`
-                if ($('.results-box').length === 0) {
-                    $(resultRegion).insertAfter('.top-box')
+        if(!(selected && keyword)) {
+            alert("You must select one of the option and type the keyword to search")
+        }
+        else {const formattedQuery = formatQuery(newQuery)
+            fetch(invoiceENDPOINT+"?"+formattedQuery, {
+                credentials: 'include',
+                method: 'GET'
+            })
+            .then(response=>{
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response.json()
+            })
+            .then(responseJSON=>{
+                if (responseJSON.invoices.length >0) {
+                    const searchResult = responseJSON.invoices.map(invoice=>`<tr class="invoice">
+                            <td>${invoice.customer}</td>
+                            <td>${invoice.generateDate}</td>
+                            <td>${invoice.invoiceNumber}</td>
+                            <td>$${invoice.items.map(item=>item.charge).reduce((total, charge)=>total+=charge).toFixed(2)}</td>
+                            <td><label for="${invoice.invoiceNumber}">Select this</label>
+                            <input type="radio" id="${invoice.invoiceNumber}" name="selected" value="${invoice.invoiceNumber}"></td>
+                        </tr>`
+                    )
+                    const resultRegion = `<section role="region" class="searchResult">
+                                <h2>Search result:</h2>
+                                <div class="results-box">
+                                    <table cellpadding="0" cellspacing="0">
+                                    <tr class="heading">
+                                            <td class="invoiceCustomerName">Customer Name</td>
+                                            <td class="invoiceDate">Invoice Date</td>
+                                            <td class="invoiceNumber">Invoice Number</td>
+                                            <td class="invoiceTotal">Invoice Total (USD)</td>
+                                            <td class="invoiceSelectBox">Action:</td>
+                                    </tr>
+                                    <tbody>
+                                        ${searchResult.join('')}
+                                    </tbody>
+                                    </table>
+                                </div>
+                                <div class="actionButton">
+                                <button class="button fa openInvoice">View &#xf35d</button>
+                                <button class="button fa editInvoice">Edit &#xf044</button>
+                                <button class="button fa deleteInvoice">Delete &#xf2ed</button>
+                    </section>`
+                    if ($('.results-box').length === 0) {
+                        $(resultRegion).insertAfter('.top-box')
+                    }
+                    else {
+                        $('.searchResult').remove()
+                        $(resultRegion).insertAfter('.top-box')
+                    }
+                    $('html, body').animate({scrollTop: $('.searchResult').offset().top}, 1000)
                 }
                 else {
-                    $('.searchResult').html(resultRegion)
+                    alert("Nothing found, please try something else")
+                    $('.searchResult').remove()
                 }
-                $('html, body').animate({scrollTop: $('.searchResult').offset().top}, 1000)
-            }
-            else {
-                alert("Nothing found, please try something else")
-            }
-            //keep JWT fresh
-            keepJWTfresh()
-        })
-        .catch(err=>
-            err.then(
-                errWithMessage=>{
-                    alert(errWithMessage.message)
-                }
+                //keep JWT fresh
+                keepJWTfresh()
+            })
+            .catch(err=>
+                err.then(
+                    errWithMessage=>{
+                        $('.searchResult').remove()
+                        alert(errWithMessage.message)
+                    }
+                )
             )
-        )
-        searchResultActions()
+            searchResultActions()}
     })
 }
 
 function searchResultActions(){
     $('.main').on('click', '.openInvoice', event=>{
         event.preventDefault()
-        const findInvoice = {
-            invoiceNumber: $('input[name="selected"]:checked').val()
-        }
-
-        //prevent popup windows being blocked by browser
-        let newInvoiceWindow;
-        
-        newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
-        newInvoiceWindow.document.write('Loading invoice...');
-        
-
-        const formattedQuery = formatQuery(findInvoice)
-        fetch(invoiceENDPOINT+"?"+formattedQuery, {
-            credentials: 'include',
-            method: 'GET'
-        })
-        .then(response=>{
-            if (response) {
-                return response.json()
+        if ($('input[name="selected"]:checked').val()) {
+            const findInvoice = {
+                invoiceNumber: $('input[name="selected"]:checked').val()
             }
-            alert("Something wrong with your search, please try something else")
-        })
-        .then(responseJSON=>{
-            viewInvoice(responseJSON, newInvoiceWindow)
-            //keep JWT fresh
-            keepJWTfresh()
-        })
-    })
-    $('.main').on('click', '.editInvoice', event=>{
-        event.preventDefault()
-        $('.centerBody').html(newInvoiceForm)
-        
-        const findInvoice = {
-            invoiceNumber: $('input[name="selected"]:checked').val()
-        }
-        const formattedQuery = formatQuery(findInvoice)
-        fetch(invoiceENDPOINT+"?"+formattedQuery, {
-            credentials: 'include',
-            method: 'GET'
-        })
-        .then(response=>{
-            if (response) {
-                return response.json()
-            }
-            alert("Something wrong with your search, please try something else")
-        })
-        .then(responseJSON=>{
-            //add back newInvoiceForm
-            $('.centerBody').html(newInvoiceForm)
+
+            //prevent popup windows being blocked by browser
+            let newInvoiceWindow;
             
-            //fill the form with existing data from selected invoice
-            const chargesDetails = responseJSON.invoices[0].items.map(item=>`
-            <div id="item${item._id}">
-            <label for="item${item._id}">Item</label>
-            <input type="text" placeholder="What to charge?" class="item" required id="item${item._id}" value="${item.item}">
-            <label for="amount${item._id}">$</label>
-            <input placeholder="0" class="amount" required id="amount${item._id}" type="number" step="0.01" value="${item.charge}">
-            <button class="remove fas fa-minus"></button>
-            </div>`)
-            $(chargesDetails.join('')).insertAfter('.items legend')
-            fetch(customerENDPOINT)
+            newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
+            newInvoiceWindow.document.write('Loading invoice...');
+            
+
+            const formattedQuery = formatQuery(findInvoice)
+            fetch(invoiceENDPOINT+"?"+formattedQuery, {
+                credentials: 'include',
+                method: 'GET'
+            })
             .then(response=>{
-                if (response.ok) {
+                if (response) {
                     return response.json()
                 }
+                alert("Something wrong with your search, please try something else")
             })
-            .then(customerResponseJSON=>{
-                const optionsList = customerResponseJSON.companies.map((company, idx)=>{
-                    if (company === responseJSON.customer.companyName) {
-                        return `<option selected="selected" value="${company}">${company} - ${customerResponseJSON.customers[idx]}</option>`
-                    }
-                    else {
-                        return `<option value="${company}">${company} - ${customerResponseJSON.customers[idx]}</option>`
-                    }
-                })
-                $('#customer').html(optionsList.join(''))
-                $('.newInvoiceForm').data("invoiceNumber", responseJSON.invoices[0].invoiceNumber);
-                //remove default item box 1
-                $('#item1').remove()
-                //remove search result from page
-                $('.searchResult').remove()
+            .then(responseJSON=>{
+                viewInvoice(responseJSON, newInvoiceWindow)
                 //keep JWT fresh
                 keepJWTfresh()
             })
+        }
+        else {
+            alert("Please select one invoice from search result")
+        }
     })
+    $('.main').on('click', '.editInvoice', event=>{
+        event.preventDefault()
+            if ($('input[name="selected"]:checked').val()) {
+                $('.centerBody').html(newInvoiceForm)
+                
+                const findInvoice = {
+                    invoiceNumber: $('input[name="selected"]:checked').val()
+                }
+                const formattedQuery = formatQuery(findInvoice)
+                fetch(invoiceENDPOINT+"?"+formattedQuery, {
+                    credentials: 'include',
+                    method: 'GET'
+                })
+                .then(response=>{
+                    if (response) {
+                        return response.json()
+                    }
+                    alert("Something wrong with your search, please try something else")
+                })
+                .then(responseJSON=>{
+                    //add back newInvoiceForm
+                    $('.centerBody').html(newInvoiceForm)
+                    
+                    //fill the form with existing data from selected invoice
+                    const chargesDetails = responseJSON.invoices[0].items.map(item=>`
+                    <div id="item${item._id}">
+                    <label for="item${item._id}">Item</label>
+                    <input type="text" placeholder="What to charge?" class="item" required id="item${item._id}" value="${item.item}">
+                    <label for="amount${item._id}">$</label>
+                    <input placeholder="0" class="amount" required id="amount${item._id}" type="number" step="0.01" value="${item.charge}">
+                    <button class="remove fas fa-minus"></button>
+                    </div>`)
+                    $(chargesDetails.join('')).insertAfter('.items legend')
+                    fetch(customerENDPOINT)
+                    .then(response=>{
+                        if (response.ok) {
+                            return response.json()
+                        }
+                    })
+                    .then(customerResponseJSON=>{
+                        const optionsList = customerResponseJSON.companies.map((company, idx)=>{
+                            if (company === responseJSON.customer.companyName) {
+                                return `<option selected="selected" value="${company}">${company} - ${customerResponseJSON.customers[idx]}</option>`
+                            }
+                            else {
+                                return `<option value="${company}">${company} - ${customerResponseJSON.customers[idx]}</option>`
+                            }
+                        })
+                        $('#customer').html(optionsList.join(''))
+                        $('.newInvoiceForm').data("invoiceNumber", responseJSON.invoices[0].invoiceNumber);
+                        //remove default item box 1
+                        $('#item1').remove()
+                        //remove search result from page
+                        $('.searchResult').remove()
+                        //keep JWT fresh
+                        keepJWTfresh()
+                    })
+                })
+            }
+            else {
+                alert("Please select one invoice from search result")
+            }
+
 })
     
     $('.main').on('click', '.deleteInvoice', event=>{
         event.preventDefault()
-        if (confirm("Are you sure? We can't bring it back one deleted")) {
-            const findInvoice = {
-                invoiceNumber: $('input[name="selected"]:checked').val()
-            }
-            const formattedQuery = formatQuery(findInvoice)
-            fetch(invoiceENDPOINT+"?"+formattedQuery, {
-                credentials: 'include',
-                method: 'DELETE'
-            })
-            .then(response=>{
-                if (response.ok) {
-                    $('.searchResult').remove()
-                    alert(`invoice ${findInvoice.invoiceNumber} deleted`)
+        if ($('input[name="selected"]:checked').val()) {
+            if (confirm("Are you sure? We can't bring it back one deleted")) {
+                const findInvoice = {
+                    invoiceNumber: $('input[name="selected"]:checked').val()
                 }
-                //keep JWT fresh
-                keepJWTfresh()
-                
-            })
+                const formattedQuery = formatQuery(findInvoice)
+                fetch(invoiceENDPOINT+"?"+formattedQuery, {
+                    credentials: 'include',
+                    method: 'DELETE'
+                })
+                .then(response=>{
+                    if (response.ok) {
+                        $('.searchResult').remove()
+                        alert(`invoice ${findInvoice.invoiceNumber} deleted`)
+                    }
+                    //keep JWT fresh
+                    keepJWTfresh()
+                    
+                })
+            }
+        }
+        else {
+            alert("Please select one invoice from search result")
         }
     })
 }
@@ -713,7 +730,6 @@ function updateProfile() {
                 window.location.assign('/')
             }
             else {
-                console.log(response)
                 alert("Something is not right, please try again")
             }
         })
@@ -832,6 +848,26 @@ function trackChanges(){
         $('.main').data("changed", true);
     })
 }
+
+function deleteMe() {
+    $('.main').on('click', '.deleteMe', event=>{
+        event.preventDefault()
+        if (confirm("Are you sure? This cannot be undone")) {
+            fetch(deleteMeENDPOINT, {
+            credentials: 'include',
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            }
+        })
+        .then(response=>{
+            if(response.ok) {
+                alert("We have removed all your data~")
+                window.location.assign('/')
+            }
+        })}
+    })
+}
 function cancelButton() {
     $('.main').on('click', '.cancel', event=>{
         event.preventDefault();
@@ -847,11 +883,20 @@ function cancelButton() {
             }
         }
         else {
-            keepJWTfresh()
+            keepJWTfresh();
             $('.centerBody').html(featureSelections);
         }
     })
 }
+
+function homeButton(){
+    $('.main').on('click', '.home', event=>{
+        event.preventDefault();
+        keepJWTfresh()
+        $('.centerBody').html(featureSelections)
+        $('.searchResult').remove()
+    }
+)}
 
 function removeItem() {
     $('.main').on('click', '.remove', event=>{
@@ -863,44 +908,62 @@ function invoiceSubmit() {
     $('.main').on('submit', '.newInvoiceForm', event=>{
         event.preventDefault();
 
-        //prevent popup windows being blocked by browser
-        let newInvoiceWindow;
-        if (confirm("Do you want to open new invoice once created?")) {
-            newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
-            newInvoiceWindow.document.write('Loading invoice...');
-        }
-        const newInvoice = {
-            "customer": $('#customer').val()
-        }
-        const items = [];
-        const totalItems = $('fieldset .item').length;
-        const inputItems = $('fieldset .item').map(function(){
-            return $(this).val()
-        })
-        const inputCharges = $('fieldset .amount').map(function(){
-            return $(this).val()
-        })
-        for (let i=0; i< totalItems; i++) {
-            let item = {};
-            if (inputItems[i]) {item.item = inputItems[i],
-                item.charge = inputCharges[i];
-                items.push(item)
+        if($('#customer').val()) {
+            //prevent popup windows being blocked by browser
+            let newInvoiceWindow;
+            if (confirm("Do you want to open new invoice once created?")) {
+                newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
+                newInvoiceWindow.document.write('Loading invoice...');
             }
-        }
+            const newInvoice = {
+                "customer": $('#customer').val()
+            }
+            const items = [];
+            const totalItems = $('fieldset .item').length;
+            const inputItems = $('fieldset .item').map(function(){
+                return $(this).val()
+            })
+            const inputCharges = $('fieldset .amount').map(function(){
+                return $(this).val()
+            })
+            for (let i=0; i< totalItems; i++) {
+                let item = {};
+                if (inputItems[i]) {item.item = inputItems[i],
+                    item.charge = inputCharges[i];
+                    items.push(item)
+                }
+            }
 
-        const now = new Date()
-        const invDate = `${now.getMonth().toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
+            const now = new Date()
+            const invDate = `${now.getMonth().toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
 
-        newInvoice.generateDate = invDate;
-        newInvoice["items"] = items;
-        
+            newInvoice.generateDate = invDate;
+            newInvoice["items"] = items;
+            
 
-        if ($('.newInvoiceForm').data("invoiceNumber")) {
-            newInvoice["invoiceNumber"] = $('.newInvoiceForm').data("invoiceNumber")
-            console.log(newInvoice)
-            return fetch(invoiceENDPOINT, {
+            if ($('.newInvoiceForm').data("invoiceNumber")) {
+                newInvoice["invoiceNumber"] = $('.newInvoiceForm').data("invoiceNumber")
+                return fetch(invoiceENDPOINT, {
+                    credentials: 'include',
+                    method: "PUT",
+                    body: JSON.stringify(newInvoice),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    } 
+                })
+                .then (responseJSON => {
+                    viewInvoice(responseJSON, newInvoiceWindow)
+                })
+            }
+            else {
+                return fetch(invoiceENDPOINT, {
                 credentials: 'include',
-                method: "PUT",
+                method: "POST",
                 body: JSON.stringify(newInvoice),
                 headers: {
                     "Content-Type": "application/json; charset=utf-8"
@@ -914,24 +977,10 @@ function invoiceSubmit() {
             .then (responseJSON => {
                 viewInvoice(responseJSON, newInvoiceWindow)
             })
+            }
         }
         else {
-            return fetch(invoiceENDPOINT, {
-            credentials: 'include',
-            method: "POST",
-            body: JSON.stringify(newInvoice),
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json()
-            } 
-        })
-        .then (responseJSON => {
-            viewInvoice(responseJSON, newInvoiceWindow)
-        })
+            alert("You must have at least one customer added before you can create new invoice")
         }
     })
 }
@@ -1011,7 +1060,11 @@ function viewInvoice(responseJSON, newInvoiceWindow) {
     //remove all input value
     $('.newInvoiceForm input').val('')
     //remove data set previously for invoice update if any
-    $('.newInvoiceForm').removeData("invoiceNumber")
+    
+    if($('.newInvoiceForm').data("invoiceNumber")) {
+        $('.centerBody').html(searchForm);
+        $('.newInvoiceForm').removeData("invoiceNumber")
+    }
     $('.invoiceTotal').empty()
 }
 function editProfile() {
