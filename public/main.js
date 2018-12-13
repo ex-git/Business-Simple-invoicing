@@ -260,8 +260,9 @@ function catchAll () {
     passwordCheck();
     updateProfile();
     logOut();
-    editCustomerButton()
-    deleteMe()
+    editCustomerButton();
+    deleteMe();
+    inputZoomFix()
 }
 
 //catch user login, get JWT once identity verified
@@ -1326,6 +1327,18 @@ function keepJWTfresh() {
             // throw response.json()
         }
     })
+}
+
+//input zoom fix for ios
+//credit https://stackoverflow.com/a/13918061/10463073
+function inputZoomFix(){
+    $('.main').on('focus', 'input',function(){
+        // replace CSS font-size with 16px to disable auto zoom on iOS
+        $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+        // put back the CSS font-size
+        $(this).css('font-size', $(this).data('fontSize'));
+      });
 }
 
 $(catchAll)
