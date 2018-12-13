@@ -59,11 +59,21 @@ CustomerSchema.virtual("fullName").get(function(){
 
 const InvoiceSchema = mongoose.Schema({
     userName: {type: String, required: true},
-    customer: {type: String, required: true},
+    customer: {type: mongoose.Schema.Types.ObjectId, ref: "Customer"},
     invoiceNumber: {type: String, required: true},
     generateDate: {type: String, required: true},
     items: [{item: String,
         charge: Number}]
+})
+
+InvoiceSchema.pre("find", function(next) {
+    this.populate("customer");
+    next()
+})
+
+InvoiceSchema.pre("findOne", function(next) {
+    this.populate("customer");
+    next()
 })
 
 
