@@ -26,7 +26,9 @@
     }
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) { 
+/* fix ios zoom issue */
+/* or can use @media screen and (-webkit-min-device-pixel-ratio:0) */
+@supports (-webkit-overflow-scrolling: touch) { 
     select,
     input {
       font-size: 16px;

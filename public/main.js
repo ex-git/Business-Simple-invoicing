@@ -32,6 +32,7 @@ const newInvoiceForm =
         <select name="customer" id="customer">
         </select>
         <button class="editCustomer fa" aria-label="edit customer">&#xf044</button>
+        <button class="newCustomer addCustomer fa" aria-label="add new customer">&#xf067</button>
     </fieldset>
     <fieldset class="items">
         <legend>Items/Services</legend>
@@ -325,7 +326,15 @@ function searchForm() {
 function newCustomerForm() {
     $('.main').on('click', '.newCustomer', event=>{
         event.preventDefault();
-        $('.centerBody').html(addCustomerForm)
+        if($('#customer').val()) {
+            if(confirm("If you leave before saving, your changes will be lost")) {
+                $('.centerBody').html(addCustomerForm)
+            }
+        }
+        else {
+            $('.centerBody').html(addCustomerForm)
+        }
+        
     })
 }
 

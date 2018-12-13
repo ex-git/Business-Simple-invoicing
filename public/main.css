@@ -184,7 +184,7 @@ fieldset {
     min-height: 100%;
 }
 
-.editCustomer {
+.editCustomer, .addCustomer {
     vertical-align: middle;
     cursor: pointer;
     background: none;
