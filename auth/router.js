@@ -5,7 +5,6 @@ const passport = require('passport')
 const jwt = require('jsonwebtoken');
 const authRouter = express.Router()
 const {JWT_SECRET, JWT_EXPIRY} = require('../config')
-const {User} = require('../models')
 
 //same as bodyParser
 authRouter.use(express.json());

@@ -14,7 +14,7 @@ const passport = require('passport');
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-//parser JWT from header
+//parser JWT from cookie
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
@@ -53,7 +53,8 @@ let server;
 
 function startServer(databaseUrl=DATABASE_URL, port=PORT) {
     return new Promise((resolve, reject)=>{
-        mongoose.connect(databaseUrl, {useNewUrlParser: true}, anyErr=>{
+        //fix deprecation warnings with useNewUrlParser: true, useFindAndModify: false
+        mongoose.connect(databaseUrl, {useNewUrlParser: true, useFindAndModify: false }, anyErr=>{
             if (anyErr) {
                 return reject(anyErr)
             };

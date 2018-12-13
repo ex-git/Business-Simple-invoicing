@@ -3,14 +3,13 @@
 const express = require('express')
 const invoiceRouter = express.Router()
 const passport = require('passport')
-const {Customer} = require('../models')
-const {Invoice} = require('../models')
+const {Customer, Invoice} = require('../models')
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
 //body parser
 invoiceRouter.use(express.json())
 
-invoiceRouter.get("/*", jwtAuth, (req, res)=>{
+invoiceRouter.get("/", jwtAuth, (req, res)=>{
     const queryName = Object.keys(req.query)[0]
     if (queryName === "customer") {
         Customer.findOne({companyName:req.query[queryName]})

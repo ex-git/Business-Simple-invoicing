@@ -13,6 +13,7 @@ const refreshENDPOINT = 'api/auth/refresh'
 const logOutENDPOINT = 'api/auth/logOut'
 const deleteMeENDPOINT = 'api/users/deleteMe'
 
+//HTML for feature selection
 const featureSelections =
 `<div class="featureSelections">
     <div class="mainFeature">
@@ -22,6 +23,7 @@ const featureSelections =
     <button class="button searchByCriteria"><i class="fas fa-search"></i><span class="feature">Search</span></button>
 </div>`;
 
+//HTML for invoice form
 const newInvoiceForm = 
 `<form class="newInvoiceForm">
     <fieldset class="customerInfo">
@@ -50,7 +52,8 @@ const newInvoiceForm =
     </fieldset>
 </form>`
 
-const searchForm = `
+//HTML for search function
+const searchInvoiceForm = `
 <form class="searchInvoice">
     <fieldset>
         <legend>Search Invoices</legend>
@@ -75,12 +78,13 @@ const searchForm = `
     </fieldset>
 </form>`
 
+//HTML for add new customer form
 const addCustomerForm = `
 <form class="addCustomer">
 <fieldset>
     <legend>Add New Customer</legend>
     <label for="customerCompanyName">Company Name</label>
-    <input type="text" id="customerCompanyName" placeholder="example: The Best Inc">
+    <input type="text" id="customerCompanyName" required placeholder="example: The Best Inc">
     <br>
     <label for="customerFirstName">First Name</label>
     <input type="text" id="customerFirstName" required placeholder="example: John" pattern="[a-zA-Z ]{2,}$">
@@ -98,13 +102,13 @@ const addCustomerForm = `
     <input type="text" id="customerState" required placeholder="example: CA" pattern="[a-zA-Z ]{2}$">
     <br>
     <label for="customerZipCode">Zip Code</label>
-    <input required pattern="[0-9]{5}" id="customerZipCode" placeholder="example: 94112" title="input 5 digit zip code">
+    <input required pattern="[0-9]{5}" id="customerZipCode" required placeholder="example: 94112" title="input 5 digit zip code">
     <br>
     <label for="customerPhoneNumber">Phone Number</label>
-    <input type="tel" id="customerPhoneNumber" placeholder="example: 6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
+    <input type="tel" id="customerPhoneNumber" required placeholder="example: 6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
     <br>
     <label for="customerEmail">Email Address</label>
-    <input type="email" id="customerEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="example: jph.william@thebest.com">
+    <input type="email" id="customerEmail" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="example: jph.william@thebest.com">
     <br>
     <button type="submit" class="button submitNewCustomer fa">Submit &#xf2bb;
     </button>
@@ -112,6 +116,7 @@ const addCustomerForm = `
 </fieldset>
 </form>`
 
+//HTML for edit user profile form
 const editProfileForm = `
 <form class="editProfileForm">
     <fieldset>
@@ -132,30 +137,30 @@ const editProfileForm = `
             <div class="passwordCheck iconFont" hidden></div>
             <div class="leftForm">
                 <label for="userFirstName">First Name</label>
-                <input type="text" id="userFirstName" required placeholder="John" pattern="[a-zA-Z ]{2,}$">
+                <input type="text" id="userFirstName" required placeholder="example: John" pattern="[a-zA-Z ]{2,}$">
                 <br>
                 <label for="userLastName">Last Name</label>
-                <input type="text" id="userLastName" required placeholder="William" pattern="[a-zA-Z ]{2,}$">
+                <input type="text" id="userLastName" required placeholder="example: William" pattern="[a-zA-Z ]{2,}$">
                 <br>
                 <label for="userPhoneNumber">Phone Number</label>
-                <input type="tel" id="userPhoneNumber" placeholder="6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
+                <input type="tel" id="userPhoneNumber" required placeholder="example: 6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
                 <br>
                 <label for="userEmail">Email Address</label>
-                <input type="email" id="userEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="jph.william@amazon.com">
+                <input type="email" id="userEmail" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="example: jph.william@amazon.com">
                 <br>
             </div>
             <div class="rightForm">
                 <label for="userStreetAddress">Street</label>
-                <input type="text" id="userStreetAddress" required placeholder="222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
+                <input type="text" id="userStreetAddress" required placeholder="example: 222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
                 <br>
                 <label for="userCity">City</label>
-                <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
+                <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="example: San Francisco">
                 <br>
                 <label for="userState">State</label>
-                <input type="text" id="userState" required placeholder="CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
+                <input type="text" id="userState" required placeholder="example: CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
                 <br>
                 <label for="userZipCode">Zip Code</label>
-                <input required pattern="[0-9]{5}" id="userZipCode" placeholder="94111" title="input 5 digit zip code only">
+                <input required pattern="[0-9]{5}" id="userZipCode" placeholder="example: 94111" title="input 5 digit zip code only">
                 <br>
             </div>
         </div>
@@ -166,6 +171,7 @@ const editProfileForm = `
     </fieldset>
 </form>`
 
+//HTML for new user register form 1st part
 const newUserFormPart1 = `
 <form class="newUserForm1">
     <fieldset>
@@ -183,6 +189,7 @@ const newUserFormPart1 = `
     </fieldset>
 </form>`
 
+//HTML for new user register form 2nd part
 const newUserFormPart2 = `
 <form class="newUserForm2">
     <fieldset>
@@ -190,42 +197,42 @@ const newUserFormPart2 = `
             <div class="passwordForm">
                 <div class="leftForm">
                     <label for="userPassword1">Password</label>
-                    <input type="password" id="userPassword1" class="newPassword">
+                    <input type="password" required id="userPassword1" class="newPassword">
                     <br>
                 </div>
                 <div class="rightForm">
                     <label for="userPassword2">Re-enter password</label>
-                    <input type="password" id="userPassword2" class="newPassword">
+                    <input type="password" required id="userPassword2" class="newPassword">
                     <br>
                 </div>
                 <div class="passwordCheck iconFont" hidden></div>
             </div>
             <div class="leftForm">
                 <label for="userFirstName">First Name</label>
-                <input type="text" id="userFirstName" required placeholder="John" pattern="[a-zA-Z ]{2,}$">
+                <input type="text" id="userFirstName" required placeholder="example: John" pattern="[a-zA-Z ]{2,}$">
                 <br>
                 <label for="userLastName">Last Name</label>
-                <input type="text" id="userLastName" required placeholder="William" pattern="[a-zA-Z ]{2,}$">
+                <input type="text" id="userLastName" required placeholder="example: William" pattern="[a-zA-Z0-9 ]{2,}$">
                 <br>
                 <label for="userPhoneNumber">Phone Number</label>
-                <input type="tel" id="userPhoneNumber" placeholder="6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
+                <input type="tel" id="userPhoneNumber" required placeholder="example: 6501231234" pattern="[0-9]{10}" title="10 digital phone number without '-'">
                 <br>
                 <label for="userEmail">Email Address</label>
-                <input type="email" id="userEmail" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="jph.william@amazon.com">
+                <input type="email" id="userEmail" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="example: jph.william@amazon.com">
                 <br>
             </div>
             <div class="rightForm">
                 <label for="userStreetAddress">Street</label>
-                <input type="text" id="userStreetAddress" required placeholder="222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
+                <input type="text" id="userStreetAddress" required placeholder="example: 222 Arco Ave" pattern="[a-zA-Z0-9 ._%+-]{2,}$">
                 <br>
                 <label for="userCity">City</label>
-                <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="San Francisco">
+                <input type="text" id="userCity" pattern="[a-zA-Z ]{2,}$" required placeholder="example: San Francisco">
                 <br>
                 <label for="userState">State</label>
-                <input type="text" id="userState" required placeholder="CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
+                <input type="text" id="userState" required placeholder="example: CA" pattern="[a-zA-Z]{2}$" title="input two letter codes only">
                 <br>
                 <label for="userZipCode">Zip Code</label>
-                <input required pattern="[0-9]{5}" id="userZipCode" placeholder="94111" title="input 5 digit zip code only">
+                <input required pattern="[0-9]{5}" id="userZipCode" placeholder="example: 94111" title="input 5 digit zip code only">
                 <br>
             </div>
         </div>
@@ -233,18 +240,32 @@ const newUserFormPart2 = `
     </fieldset>
 </form>`
 
-function catchButtonsClick () {
-    $('.main').on('click', '.mainPageRegister', event=>{
-        event.preventDefault();
-        $('.mainPageGreeting').prop('hidden', true);
-        $('.centerBody').append(newUserFormPart1)
-    })
-    $('.main').on('click', '.mainPageLogin', event=>{
-        event.preventDefault();
-        $('.mainPageGreeting').prop('hidden', true);
-        $('.logInForm').prop('hidden', false)
-        $('.logInForm fieldset').prop('disabled', false)
-    })
+function catchAll () {
+    logIn();
+    logInForm()
+    registerForm()
+    addInvoice();
+    addTotal();
+    addMoreItem();
+    removeItem();
+    invoiceSubmit();
+    searchForm();
+    newCustomerForm()
+    editProfile();
+    cancelButton();
+    homeButton();
+    trackChanges();
+    addNewCustomer();
+    addNewUser();
+    passwordCheck();
+    updateProfile();
+    logOut();
+    editCustomerButton()
+    deleteMe()
+}
+
+//catch user login, get JWT once identity verified
+function logIn(){
     $('.main').on('submit', '.logInForm', event=>{
         event.preventDefault();
         const userInfo = {
@@ -279,37 +300,48 @@ function catchButtonsClick () {
             alert(err.message) 
         )
     })
+}
 
+//generate login form when user click login button
+function logInForm(){
+    $('.main').on('click', '.mainPageLogin', event=>{
+        event.preventDefault();
+        $('.mainPageGreeting').prop('hidden', true);
+        $('.logInForm').prop('hidden', false)
+        $('.logInForm fieldset').prop('disabled', false)
+    })
+}
+
+//generate search form when user click search button
+function searchForm() {
     $('.main').on('click', '.searchByCriteria', event=>{
         event.preventDefault();
-        $('.centerBody').html(searchForm);
+        $('.centerBody').html(searchInvoiceForm);
         searchInvoices()
     })
+}
 
+//generate new customer form when user click new customer button
+function newCustomerForm() {
     $('.main').on('click', '.newCustomer', event=>{
         event.preventDefault();
         $('.centerBody').html(addCustomerForm)
     })
-    addMoreItem();
-    removeItem();
-    invoiceSubmit();
-    addTotal();
-    editProfile();
-    cancelButton();
-    homeButton();
-    trackChanges();
-    addNewCustomer();
-    addNewUser();
-    passwordCheck();
-    updateProfile();
-    logOut();
-    addInvoice();
-    editCustomerButton()
-    deleteMe()
 }
 
+//generate register form when user click register button
+function registerForm() {
+    $('.main').on('click', '.mainPageRegister', event=>{
+        event.preventDefault();
+        $('.mainPageGreeting').prop('hidden', true);
+        $('.centerBody').append(newUserFormPart1)
+    })
+}
+
+//render invoice form
 function addInvoiceForm() {
     $('.centerBody').html(newInvoiceForm)
+        //check if user have at least one customer in databse
         fetch(customerENDPOINT)
         .then(response=>{
             if (response.ok) {
@@ -322,11 +354,123 @@ function addInvoiceForm() {
             $('#customer').html(optionsList)
         })
         .catch(err=>{
+            //set data to centerbody class, will use it to identity user is coming from add new invoice page
+            //when new customer added, will bring user back to invoice page
             $('.centerBody').data("newInvoice", true)
+            //redirect user to add customer page
             $('.centerBody').html(addCustomerForm)
             alert(err.message)
         })
 }
+
+//add invoice items
+let itemNumber = 1;
+function addMoreItem() {
+    $('.main').on('click', '.addMoreItem', event=>{
+        event.preventDefault();
+        itemNumber +=1;
+        const addMore = `
+        <div class="item${itemNumber}">
+            <label for="item${itemNumber}">Item</label>
+            <input type="text" placeholder="What to charge?" class="item" required id="item${itemNumber}">
+            <label for="amount${itemNumber}">$</label>
+            <input placeholder="0" class="amount" required id="amount${itemNumber}" type="number" step="0.01" >
+            <button class="remove fas fa-minus" aria-label="remove item"></button>
+         </div>`
+        $(addMore).insertBefore('.invoiceTotal')
+    })
+}
+
+//catch invoice submit
+function invoiceSubmit() {
+    $('.main').on('submit', '.newInvoiceForm', event=>{
+        event.preventDefault();
+
+        //check if user has at least one customer before creating invoice
+        if($('#customer').val()) {
+            //open new window for new created invoice if user confirmed
+            //prevent popup invoice window being blocked by browser, open it immediately after user's interaction
+            let newInvoiceWindow;
+            if (confirm("Do you want to open new invoice once created?")) {
+                newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
+                newInvoiceWindow.document.write('Loading invoice...');
+            }
+            const newInvoice = {
+                "customer": $('#customer').val()
+            }
+            const items = [];
+            const totalItems = $('fieldset .item').length;
+            //check if total item is greater than 0
+            if (totalItems >0) 
+                {const inputItems = $('fieldset .item').map(function(){
+                    return $(this).val()
+                })
+                const inputCharges = $('fieldset .amount').map(function(){
+                    return $(this).val()
+                })
+                for (let i=0; i< totalItems; i++) {
+                    let item = {};
+                    if (inputItems[i]) {item.item = inputItems[i],
+                        item.charge = inputCharges[i];
+                        items.push(item)
+                    }
+                }
+                //generate invoice date with format MM/DD/YYYY
+                const now = new Date()
+                const invDate = `${now.getMonth().toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
+                newInvoice.generateDate = invDate;
+                newInvoice["items"] = items;
+                
+                //check if user want to update an existing invoice
+                if ($('.newInvoiceForm').data("invoiceNumber")) {
+                    newInvoice["invoiceNumber"] = $('.newInvoiceForm').data("invoiceNumber")
+                    return fetch(invoiceENDPOINT, {
+                        credentials: 'include',
+                        method: "PUT",
+                        body: JSON.stringify(newInvoice),
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json()
+                        } 
+                    })
+                    .then (responseJSON => {
+                        viewInvoice(responseJSON, newInvoiceWindow)
+                    })
+                }
+                else {
+                    return fetch(invoiceENDPOINT, {
+                    credentials: 'include',
+                    method: "POST",
+                    body: JSON.stringify(newInvoice),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    } 
+                })
+                .then (responseJSON => {
+                    viewInvoice(responseJSON, newInvoiceWindow)
+                })
+                }
+            }
+            else {
+                alert("You must have at least one item to create an invoice")
+            }
+        }
+        else {
+            alert("You must have at least one customer added before you can create new invoice")
+        }
+    })
+}
+
+//generate invoice form when user click new invoice button
 function addInvoice() {
     $('.main').on('click', '.newInvoice', event=>{
         event.preventDefault();
@@ -335,7 +479,91 @@ function addInvoice() {
         keepJWTfresh()
     })
 }
-//check if password start with space or if user input incorrect password
+//pop up new windows with preset format for new invoice
+function viewInvoice(responseJSON, newInvoiceWindow) {
+    if(newInvoiceWindow) {
+        let totalCharges = responseJSON.invoices[0].items.map(item=>item.charge).reduce((total, charge)=>total+=charge).toFixed(2);
+        let items = responseJSON.invoices[0].items.map(item=>`<tr class="item"><td>${item["item"]}</td><td>$${item["charge"]}</td></tr>`)
+        let invoiceHtml =
+        `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <title>Invoice# ${responseJSON.invoices[0].invoiceNumber}</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" type="text/css" media="screen,print" href="./invoice.css">
+        </head>
+        <body>
+            <main role="main" class="main">
+                <section role="region" class="invoice">
+                    <div class="invoice-box">
+                        <table cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr class="top">
+                                    <td colspan="2">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td class="title">${responseJSON.user.companyName}</td>
+                                                <td>Invoice #: ${responseJSON.invoices[0].invoiceNumber}<br>
+                                                Created: ${responseJSON.invoices[0].generateDate}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr class="information">
+                                        <td colspan="2">
+                                            <table>
+                                                <tbody><tr>
+                                                    <td>
+                                                        ${responseJSON.user.companyName}<br>
+                                                        ${responseJSON.user.address.street}<br>
+                                                        ${responseJSON.user.address.city}, ${responseJSON.user.address.state} ${responseJSON.user.address.zipCode}
+                                                    </td>
+                                                    <td>
+                                                        ${responseJSON.customer.companyName}<br>
+                                                        ${responseJSON.customer.firstName} ${responseJSON.customer.lastName}<br>
+                                                        ${responseJSON.customer.address.street}<br>
+                                                        ${responseJSON.customer.address.city}, ${responseJSON.customer.address.state} ${responseJSON.customer.address.zipCode}<br>
+                                                        ${responseJSON.customer.email}
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        </td></tr>
+                                
+                                <tr class="heading">
+                                    <td>Item</td>
+                                    <td>Price</td>
+                                </tr>
+                                ${items}
+                                <tr class="total"><td></td>
+                                        <td>Total: $${totalCharges}</td></tr>
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </body>
+        </html>`
+        $(newInvoiceWindow.document.body).html(invoiceHtml);
+    }
+    else {
+        alert(`Invoice created, invoice# ${responseJSON.invoices[0].invoiceNumber}`)
+    }
+    //remove all input value
+    $('.newInvoiceForm input').val('')
+    //remove data set previously for invoice update if any
+    
+    if($('.newInvoiceForm').data("invoiceNumber")) {
+        $('.centerBody').html(searchForm);
+        $('.newInvoiceForm').removeData("invoiceNumber")
+    }
+    $('.invoiceTotal').empty()
+}
+
+//check if password start or end with space or if user input missmatch password
 function passwordCheck(){
     $('.main').on('keyup change', '.newPassword', event=>{
         if ($('#userPassword1').val().trim() !== $('#userPassword1').val() || $('#userPassword2').val().trim() !== $('#userPassword2').val()) {
@@ -355,17 +583,19 @@ function passwordCheck(){
     })
 }
 
+//convert json query to url format for GET
 function formatQuery(query){
     return Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
 }
 
+//query server when user submit search request
 function searchInvoices() {
     $('.main').on('submit', '.searchInvoice', event=>{
         event.preventDefault();
         const selected = $('input[name="criteria"]:checked').val()
         const keyword = $('#keyword').val()
         const newQuery = {}
-        
+        //check what user want to search
         if (selected === "searchInvoiceNumber") {
             newQuery.invoiceNumber = keyword
         }
@@ -375,6 +605,7 @@ function searchInvoices() {
         else if (selected === "searchCustomerCompanyName") {
             newQuery.customer = keyword
         }
+        //alert user if nothing selected or no input
         if(!(selected && keyword)) {
             alert("You must select one of the option and type the keyword to search")
         }
@@ -390,6 +621,7 @@ function searchInvoices() {
                 throw response.json()
             })
             .then(responseJSON=>{
+                //generate table with search result
                 if (responseJSON.invoices.length >0) {
                     const searchResult = responseJSON.invoices.map(invoice=>`<tr class="invoice">
                             <td>${invoice.customer.companyName}</td>
@@ -449,6 +681,7 @@ function searchInvoices() {
     })
 }
 
+//catch edit customer button click
 function editCustomerButton() {
     $('.main').on('click', '.editCustomer', event=>{
         event.preventDefault()
@@ -494,6 +727,7 @@ function editCustomerButton() {
     })
 }
 
+//catch delete customer button click
 function deleteCustomer() {
     $('.main').on('click', '.deleteCustomer', event=>{
         event.preventDefault();
@@ -525,7 +759,9 @@ function deleteCustomer() {
     })
 }
 
+//catch actions buttons click from search result page
 function searchResultActions(){
+    //open invoice button
     $('.main').on('click', '.openInvoice', event=>{
         event.preventDefault()
         if ($('input[name="selected"]:checked').val()) {
@@ -561,6 +797,7 @@ function searchResultActions(){
             alert("Please select one invoice from search result")
         }
     })
+    //edit invoice button
     $('.main').on('click', '.editInvoice', event=>{
         event.preventDefault()
             if ($('input[name="selected"]:checked').val()) {
@@ -623,9 +860,8 @@ function searchResultActions(){
             else {
                 alert("Please select one invoice from search result")
             }
-
-})
-    
+    })
+    //delete invoice button
     $('.main').on('click', '.deleteInvoice', event=>{
         event.preventDefault()
         if ($('input[name="selected"]:checked').val()) {
@@ -654,7 +890,10 @@ function searchResultActions(){
         }
     })
 }
+
+//add new user
 function addNewUser() {
+    //add new user part 1, check user name availbility
     $('.main').on('change keyup', '.newUserForm1 #newUserName', event=>{
         event.preventDefault();
         if ($(event.currentTarget).val().trim() && ($(event.currentTarget).val() !== $(event.currentTarget).val().trim())) {
@@ -697,6 +936,7 @@ function addNewUser() {
             $('.newUserForm1 .newUserNext').prop('disabled', true)
         }
     })
+    //add new user part 1, check company name availbility
     $('.main').on('change keyup', '.newUserForm1 #userCompanyName', event=>{
         event.preventDefault();
         if ($(event.currentTarget).val().trim() && ($(event.currentTarget).val().trim() !== $(event.currentTarget).val())) {
@@ -740,6 +980,7 @@ function addNewUser() {
             $('.newUserForm1 .newUserNext').prop('disabled', true)
         }
     })
+    //catch part 1 form submit
     $('.main').on('submit', '.newUserForm1', event=>{
         event.preventDefault();
         $('.newUserForm1').prop('hidden', true)
@@ -747,6 +988,7 @@ function addNewUser() {
         $('.newUserForm1 .newUserNext').prop('disabled', true)
         $('.centerBody').append(newUserFormPart2)
     })
+    //catch part 2 form submit
     $('.main').on('submit', '.newUserForm2', event=>{
         event.preventDefault();
         const newUserInfo = {
@@ -786,6 +1028,7 @@ function addNewUser() {
     })
 }
 
+//catch update user profile submit
 function updateProfile() {
     $('.main').on('submit', '.editProfileForm', event=>{
         event.preventDefault();
@@ -822,6 +1065,7 @@ function updateProfile() {
     })
 }
 
+//log out button
 function logOut() {
     $('.main').on('click', '.logOut', event=>{
         event.preventDefault();
@@ -843,6 +1087,7 @@ function logOut() {
     })
 }
 
+//catch add customer submit
 function addNewCustomer() {
     $('.main').on('submit', '.addCustomer', event=>{
         event.preventDefault();
@@ -933,25 +1178,8 @@ function addNewCustomer() {
     })
 }
 
-//invoice items
-let itemNumber = 1;
 
-function addMoreItem() {
-    $('.main').on('click', '.addMoreItem', event=>{
-        event.preventDefault();
-        itemNumber +=1;
-        const addMore = `
-        <div class="item${itemNumber}">
-            <label for="item${itemNumber}">Item</label>
-            <input type="text" placeholder="What to charge?" class="item" required id="item${itemNumber}">
-            <label for="amount${itemNumber}">$</label>
-            <input placeholder="0" class="amount" required id="amount${itemNumber}" type="number" step="0.01" >
-            <button class="remove fas fa-minus" aria-label="remove item"></button>
-         </div>`
-        $(addMore).insertBefore('.invoiceTotal')
-    }
-)}
-
+//catch user input for charges and add total
 function addTotal(){
     let updatTotal = function() {
         let total = 0;
@@ -973,12 +1201,14 @@ function addTotal(){
     })
 }
 
+//check if user changed form
 function trackChanges(){
     $('.main').on('change', 'input', event=>{
         $('.main').data("changed", true);
     })
 }
 
+//remove user data
 function deleteMe() {
     $('.main').on('click', '.deleteMe', event=>{
         event.preventDefault()
@@ -998,6 +1228,8 @@ function deleteMe() {
         })}
     })
 }
+
+//catch cance button click
 function cancelButton() {
     $('.main').on('click', '.cancel', event=>{
         event.preventDefault();
@@ -1019,6 +1251,7 @@ function cancelButton() {
     })
 }
 
+//catch home button click
 function homeButton(){
     $('.main').on('click', '.home', event=>{
         event.preventDefault();
@@ -1028,179 +1261,20 @@ function homeButton(){
     }
 )}
 
+//catch remove button click
 function removeItem() {
     $('.main').on('click', '.remove', event=>{
         event.currentTarget.closest('div').remove();
     }
 )}
 
-function invoiceSubmit() {
-    $('.main').on('submit', '.newInvoiceForm', event=>{
-        event.preventDefault();
 
-        if($('#customer').val()) {
-            //prevent popup windows being blocked by browser
-            let newInvoiceWindow;
-            if (confirm("Do you want to open new invoice once created?")) {
-                newInvoiceWindow = window.open("","New Invoice","resizable,scrollbars=yes,status=0,_blank");
-                newInvoiceWindow.document.write('Loading invoice...');
-            }
-            const newInvoice = {
-                "customer": $('#customer').val()
-            }
-            const items = [];
-            const totalItems = $('fieldset .item').length;
-            const inputItems = $('fieldset .item').map(function(){
-                return $(this).val()
-            })
-            const inputCharges = $('fieldset .amount').map(function(){
-                return $(this).val()
-            })
-            for (let i=0; i< totalItems; i++) {
-                let item = {};
-                if (inputItems[i]) {item.item = inputItems[i],
-                    item.charge = inputCharges[i];
-                    items.push(item)
-                }
-            }
-
-            const now = new Date()
-            const invDate = `${now.getMonth().toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
-
-            newInvoice.generateDate = invDate;
-            newInvoice["items"] = items;
-            
-            //check if user want to update an existing invoice
-            if ($('.newInvoiceForm').data("invoiceNumber")) {
-                newInvoice["invoiceNumber"] = $('.newInvoiceForm').data("invoiceNumber")
-                return fetch(invoiceENDPOINT, {
-                    credentials: 'include',
-                    method: "PUT",
-                    body: JSON.stringify(newInvoice),
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8"
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json()
-                    } 
-                })
-                .then (responseJSON => {
-                    viewInvoice(responseJSON, newInvoiceWindow)
-                })
-            }
-            else {
-                return fetch(invoiceENDPOINT, {
-                credentials: 'include',
-                method: "POST",
-                body: JSON.stringify(newInvoice),
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8"
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                } 
-            })
-            .then (responseJSON => {
-                viewInvoice(responseJSON, newInvoiceWindow)
-            })
-            }
-        }
-        else {
-            alert("You must have at least one customer added before you can create new invoice")
-        }
-    })
-}
-
-function viewInvoice(responseJSON, newInvoiceWindow) {
-    if(newInvoiceWindow) {
-        let totalCharges = responseJSON.invoices[0].items.map(item=>item.charge).reduce((total, charge)=>total+=charge).toFixed(2);
-        let items = responseJSON.invoices[0].items.map(item=>`<tr class="item"><td>${item["item"]}</td><td>$${item["charge"]}</td></tr>`)
-        let invoiceHtml =
-        `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="utf-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <title>Invoice# ${responseJSON.invoices[0].invoiceNumber}</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" type="text/css" media="screen,print" href="./invoice.css">
-        </head>
-        <body>
-            <main role="main" class="main">
-                <section role="region" class="invoice">
-                    <div class="invoice-box">
-                        <table cellpadding="0" cellspacing="0">
-                            <tbody>
-                                <tr class="top">
-                                    <td colspan="2">
-                                        <table>
-                                            <tbody>
-                                            <tr>
-                                                <td class="title">${responseJSON.user.companyName}</td>
-                                                <td>Invoice #: ${responseJSON.invoices[0].invoiceNumber}<br>
-                                                Created: ${responseJSON.invoices[0].generateDate}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr class="information">
-                                        <td colspan="2">
-                                            <table>
-                                                <tbody><tr>
-                                                    <td>
-                                                        ${responseJSON.user.companyName}<br>
-                                                        ${responseJSON.user.address.street}<br>
-                                                        ${responseJSON.user.address.city}, ${responseJSON.user.address.state} ${responseJSON.user.address.zipCode}
-                                                    </td>
-                                                    <td>
-                                                        ${responseJSON.customer.companyName}<br>
-                                                        ${responseJSON.customer.firstName} ${responseJSON.customer.lastName}<br>
-                                                        ${responseJSON.customer.address.street}<br>
-                                                        ${responseJSON.customer.address.city}, ${responseJSON.customer.address.state} ${responseJSON.customer.address.zipCode}<br>
-                                                        ${responseJSON.customer.email}
-                                                    </td>
-                                                </tr>
-                                            </tbody></table>
-                                        </td></tr>
-                                
-                                <tr class="heading">
-                                    <td>Item</td>
-                                    <td>Price</td>
-                                </tr>
-                                ${items}
-                                <tr class="total"><td></td>
-                                        <td>Total: $${totalCharges}</td></tr>
-                                </tbody>
-                        </table>
-                    </div>
-                </section>
-            </main>
-        </body>
-        </html>`
-        $(newInvoiceWindow.document.body).html(invoiceHtml);
-    }
-    else {
-        alert(`Invoice created, invoice# ${responseJSON.invoices[0].invoiceNumber}`)
-    }
-    //remove all input value
-    $('.newInvoiceForm input').val('')
-    //remove data set previously for invoice update if any
-    
-    if($('.newInvoiceForm').data("invoiceNumber")) {
-        $('.centerBody').html(searchForm);
-        $('.newInvoiceForm').removeData("invoiceNumber")
-    }
-    $('.invoiceTotal').empty()
-}
+//edit profile function
 function editProfile() {
     $('.profile').on('click', event=>{
         event.preventDefault();
         $('.centerBody').html(editProfileForm)
+        //get user info from database
         fetch(userENDPOINT)
         .then(response=>{
             if (response.ok) {
@@ -1220,6 +1294,7 @@ function editProfile() {
     })
 }
 
+//set up timer to remind user if they need more time before JWT expire
 let timer
 function sessionTimeCheck() {
     if(confirm("Your login session will be timed out soon, do you need more time?")) {
@@ -1231,6 +1306,7 @@ function sessionTimeCheck() {
     }
 }
 
+//exchange new JWT
 function keepJWTfresh() {
     fetch(refreshENDPOINT, {
         credentials: 'include',
@@ -1251,4 +1327,5 @@ function keepJWTfresh() {
         }
     })
 }
-$(catchButtonsClick)
+
+$(catchAll)

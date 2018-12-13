@@ -1,10 +1,9 @@
 //passport
 
-//  same as
-// const { Strategy: LocalStrategy } = require('passport-local');
+//  same as === const { Strategy: LocalStrategy } = require('passport-local');
 const LocalStrategy = require("passport-local").Strategy;
 
-const { Strategy: JWTStrategy, ExtractJwt } = require('passport-jwt');
+const { Strategy: JWTStrategy} = require('passport-jwt');
 
 const {JWT_SECRET} = require('../config')
 const {User} = require("../models");
@@ -43,6 +42,8 @@ const localStrategy = new LocalStrategy({
     });
 });
 
+
+//Extra JWT from cookie
 const cookieExtractor = function(req) {
     var token = null;
     if (req && req.cookies) 

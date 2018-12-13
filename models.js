@@ -5,11 +5,6 @@ const bcrypt = require('bcryptjs');
 
 const mongoose = require('mongoose');
 
-// bug fix for "DeprecationWarning: collection.findAndModify is deprecated. Use findOneAndUpdate, findOneAndReplace or findOneAndDelete instead"
-// without this findOneAndUpdate will not wrok
-// credit: https://github.com/Automattic/mongoose/issues/6880#issuecomment-414151421
-mongoose.set('useFindAndModify', false);
-
 const UserSchema = mongoose.Schema({
     companyName: {type: String, required:true},
     firstName: {type: String, required:true},
