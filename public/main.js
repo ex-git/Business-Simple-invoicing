@@ -2,16 +2,16 @@
 
 const userENDPOINT = '/api/users'
 const newUserENDPOINT = '/api/users/newUser'
-const editUserENDPOINT = 'api/users/editUser'
+const editUserENDPOINT = '/api/users/editUser'
 const loginENDPOINT = '/api/auth/login'
 const checkENDPOINT = '/api/users/checkAvailability'
 const customerENDPOINT = '/api/customers'
 const findCustomerENDPOINT = '/api/customers/find'
 const deleteCustomerENDPOINT = '/api/customers/delete'
 const invoiceENDPOINT = '/api/invoices'
-const refreshENDPOINT = 'api/auth/refresh'
-const logOutENDPOINT = 'api/auth/logOut'
-const deleteMeENDPOINT = 'api/users/deleteMe'
+const refreshENDPOINT = '/api/auth/refresh'
+const logOutENDPOINT = '/api/auth/logOut'
+const deleteMeENDPOINT = '/api/users/deleteMe'
 
 //HTML for feature selection
 const featureSelections =
@@ -1319,7 +1319,7 @@ function sessionTimeCheck() {
 function keepJWTfresh() {
     fetch(refreshENDPOINT, {
         credentials: 'include',
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         }

@@ -13,10 +13,13 @@
 
 @media screen and (max-width: 500px) {
     .centerBody {
-        margin-top: 35%;
+        margin-top: 25%;
     }
     .mainPageGreeting h2 {
         margin-bottom: 20px
+    }
+    .mainPageGreeting {
+        margin-top:30%
     }
 }
 
