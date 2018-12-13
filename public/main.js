@@ -417,7 +417,7 @@ function invoiceSubmit() {
                 }
                 //generate invoice date with format MM/DD/YYYY
                 const now = new Date()
-                const invDate = `${now.getMonth().toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
+                const invDate = `${(now.getMonth()+1).toString()}/${now.getDate().toString()}/${now.getFullYear().toString()}`
                 newInvoice.generateDate = invDate;
                 newInvoice["items"] = items;
                 
