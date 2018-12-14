@@ -83,7 +83,7 @@ const searchInvoiceForm = `
 const addCustomerForm = `
 <form class="addCustomer">
 <fieldset>
-    <legend>Add New Customer</legend>
+    <legend>Add/Edit Customer</legend>
     <label for="customerCompanyName">Company Name</label>
     <input type="text" id="customerCompanyName" required placeholder="example: The Best Inc">
     <br>

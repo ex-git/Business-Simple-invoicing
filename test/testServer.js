@@ -29,6 +29,33 @@ function generateFakeUser() {
     }
 }
 
+function generateFakeCustomer(){
+    return {
+        companyName: faker.company.companyName(),
+        firstName : faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        phoneNumber: Math.random().toString().slice(2,12),
+        email: faker.internet.email(),
+        address: {
+            street: faker.address.streetAddress("###"),
+            city: faker.address.city(),
+            state: faker.address.stateAbbr(),
+            zipCode: faker.address.zipCode()
+        }
+    }
+}
+
+function generateFakeInvoice() {
+    return {
+        invoiceNumber: Math.random().toString().slice(2,12),
+        generateDate: "1/1/2018",
+        items: {
+            item: faker.company.catchPhrase(),
+            charge: Math.random().toString().slice(2,4)
+        }
+    }
+}
+
 describe("Testing front end with GET", function(){
     before(function() {
         return startServer(TEST_DATABASE_URL)
@@ -63,7 +90,7 @@ describe("Testing user endpoint", function(){
     after(function(){
         return stopServer()
     })
-    describe("Testing on creating new user and login", function(){
+    describe("Testing CRUD on user endpoint", function(){
         const newUser = generateFakeUser()
         it("should get 201 code when new user created", function(){
             return chai.request(app)
@@ -73,7 +100,7 @@ describe("Testing user endpoint", function(){
                 expect(res).to.have.status(201)
             })
         })
-        it("should get 200 code when login with new user ID and password", function(){
+        it("should have correct status response from user endpoint for CRUD", function(){
             //use chai agent to retain cookie
             const agent = chai.request.agent(app)
             return agent
@@ -85,22 +112,169 @@ describe("Testing user endpoint", function(){
             .then(function(res){
                 expect(res).to.have.status(200);
                 expect(res).to.have.cookie('authToken');
-                return res
-            })
-            .then(function() {
-                agent
-                .get("/api/auth/logOut")
+                expect(res).to.be.json;
+                expect(res.body).to.be.a("object");
+                return agent
+                .put("/api/users/editUser")
+                .send(newUser)
                 .then(function(res){
                     expect(res).to.have.status(200)
-                    agent.close()
+                    return agent
+                    .post("/api/auth/login")
+                    .send({
+                        userName : newUser.userName,
+                        password : newUser.password
+                    })
+                    .then(function(){
+                        return agent
+                        .delete("/api/users/deleteMe")
+                        .then(function(res){
+                            expect(res).to.have.status(200)
+                            return agent
+                            .get("/api/auth/refresh")
+                            .then(function(res){
+                                expect(res).to.have.status(401)
+                                agent.close()
+                            })
+                        })
+                    }) 
                 })
             })
-            .then(function() {
-                agent
-                .get("/api/auth/refresh")
+        })
+    })
+    describe("Testing CRUD on customer endpoint", function(){
+        const newUser = generateFakeUser()
+        const newCustomer = generateFakeCustomer()
+        it("should get 201 code when new user created", function(){
+            return chai.request(app)
+            .post("/api/users/newUser")
+            .send(newUser)
+            .then(function(res){
+                expect(res).to.have.status(201)
+            })
+        })
+        it("should have correct status response from customer endpoint for CRUD", function(){
+            //use chai agent to retain cookie
+            const agent = chai.request.agent(app)
+            return agent
+            .post("/api/auth/login")
+            .send({
+                userName : newUser.userName,
+                password : newUser.password
+            })
+            .then(function(res){
+                expect(res).to.have.status(200);
+                expect(res).to.have.cookie('authToken');
+                return agent
+                .get("/api/customers/find")
                 .then(function(res){
-                    expect(res).to.have.status(200)
-                    agent.close()
+                    expect(res).to.have.status(404)
+                    return agent
+                    .post("/api/customers")
+                    .send(newCustomer)
+                    .then(function(res){
+                        expect(res).to.have.status(201)
+                        expect(res).to.be.json
+                        expect(res.body).to.be.a("object");
+                        return agent
+                        .get("/api/customers")
+                        .then(function(res){
+                            expect(res).to.have.status(200)
+                            expect(res).to.be.json
+                            newCustomer._id = res.body.ids[0]
+                            return agent
+                            .put("/api/customers")
+                            .send(newCustomer)
+                            .then(function(res){
+                                expect(res).to.have.status(201)
+                                return agent
+                                .delete(`/api/customers/delete?id=${res.body.customer._id}`)
+                                .then(function(res){
+                                    expect(res).to.have.status(200)
+                                    return agent
+                                    .delete("/api/users/deleteMe")
+                                    .then(function(res){
+                                        expect(res).to.have.status(200)
+                                        return agent
+                                        .get("/api/auth/refresh")
+                                        .then(function(res){
+                                            expect(res).to.have.status(401)
+                                            agent.close()
+                                        })
+                                    })
+                                })
+                            })
+                        })
+                    })
+                }) 
+            })
+        })
+    })
+    describe("Testing CRUD on invoice endpoint", function(){
+        const newUser = generateFakeUser()
+        const newCustomer = generateFakeCustomer()
+        const newInvoice = generateFakeInvoice()
+        it("should get 201 code when new user created", function(){
+            return chai.request(app)
+            .post("/api/users/newUser")
+            .send(newUser)
+            .then(function(res){
+                expect(res).to.have.status(201)
+            })
+        })
+        it("should have correct status response from invoice endpoint", function(){
+            //use chai agent to retain cookie
+            const agent = chai.request.agent(app)
+            return agent
+            .post("/api/auth/login")
+            .send({
+                userName : newUser.userName,
+                password : newUser.password
+            })
+            .then(function(res){
+                expect(res).to.have.status(200);
+                expect(res).to.have.cookie('authToken');
+                return agent
+                .get("/api/customers/find")
+                .then(function(res){
+                    expect(res).to.have.status(404)
+                    return agent
+                    .post("/api/customers")
+                    .send(newCustomer)
+                    .then(function(res){
+                        expect(res).to.have.status(201)
+                        expect(res).to.be.json
+                        expect(res.body).to.be.a("object");
+                        return agent
+                        .get("/api/customers")
+                        .then(function(res){
+                            expect(res).to.have.status(200)
+                            expect(res).to.be.json
+                            newInvoice.customer = res.body.ids[0]
+                            return agent
+                            .post("/api/invoices")
+                            .send(newInvoice)
+                            .then(function(res){
+                                expect(res).to.have.status(201)
+                                return agent
+                                .delete(`/api/customers/delete?id=${res.body.customer._id}`)
+                                .then(function(res){
+                                    expect(res).to.have.status(200)
+                                    return agent
+                                    .delete("/api/users/deleteMe")
+                                    .then(function(res){
+                                        expect(res).to.have.status(200)
+                                        return agent
+                                        .get("/api/auth/refresh")
+                                        .then(function(res){
+                                            expect(res).to.have.status(401)        
+                                            agent.close()         
+                                        })
+                                    })
+                                })
+                            })
+                        })
+                    }) 
                 })
             })
         })
