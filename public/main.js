@@ -1580,6 +1580,7 @@ function editProfile() {
         keepJWTfresh()
         $('.centerBody').html(editProfileForm)
         $('.centerBody').removeData("newInvoice")
+        $('searchResult').remove()
         //get user info from database
         fetch(userENDPOINT)
         .then(response=>{
