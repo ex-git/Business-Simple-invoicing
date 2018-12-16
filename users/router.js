@@ -54,7 +54,30 @@ usersRouter.put("/editUser", jwtAuth, (req, res)=>{
             res.status(400).end()
         }
     }
-    if(req.body.password) {
+    if(req.body.password === "" || req.user.userName==="demo") {
+        User.findByIdAndUpdate(req.user._id, {$set: {
+                firstName : req.body.firstName,
+                lastName: req.body.lastName,
+                phoneNumber: req.body.phoneNumber,
+                email: req.body.email,
+                address: {
+                    street: req.body.address.street,
+                    city: req.body.address.city,
+                    state: req.body.address.state,
+                    zipCode: req.body.address.zipCode
+                }
+            }})
+            .then(user=>{
+                //set cookie with JWT to expire 
+                res.status(200).end()
+            })
+            .catch(
+                err=>{
+                    res.status(400).end()
+                }
+            )
+    }
+    else if(req.body.password) {
         User.hashPassword(req.body.password)
         .then(hashPassword=> {
             User.findOneAndUpdate({userName:req.user.userName}, {$set: {
@@ -73,7 +96,7 @@ usersRouter.put("/editUser", jwtAuth, (req, res)=>{
             })
             .then(user=>{
                 //set cookie with JWT to expire 
-                res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+                res.status(200).end()
             })
             .catch(
                 err=>{
@@ -82,29 +105,7 @@ usersRouter.put("/editUser", jwtAuth, (req, res)=>{
             )
         })
     }
-    else if(req.body.password === "") {
-        User.findByIdAndUpdate(req.user._id, {$set: {
-                firstName : req.body.firstName,
-                lastName: req.body.lastName,
-                phoneNumber: req.body.phoneNumber,
-                email: req.body.email,
-                address: {
-                    street: req.body.address.street,
-                    city: req.body.address.city,
-                    state: req.body.address.state,
-                    zipCode: req.body.address.zipCode
-                }
-            }})
-            .then(user=>{
-                //set cookie with JWT to expire 
-                res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
-            })
-            .catch(
-                err=>{
-                    res.status(400).end()
-                }
-            )
-    }
+    
 })
 
 //check if user name and company name are already registered
@@ -129,14 +130,20 @@ usersRouter.post("/checkAvailability", (req, res)=>{
 //Delete user and all data
 usersRouter.delete("/deleteMe", jwtAuth, (req, res)=>{
     let user = req.user.userName
-    User.deleteMany({userName: user})
+    if(req.user.userName=== "demo") {
+        res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+    }
+    else {
+        User.deleteMany({userName: user})
         .then(()=>{
             return Invoice.deleteMany({userName: user})}
         )
         .then(()=>{
             return Customer.deleteMany({userName: user})}
         )
-        .then(res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end())
+        .then(res.status(200).cookie('authToken', "", {maxAge: 0, httpOnly: true, sameSite: "lax"}).end()
+        )
+    } 
 })
 
 module.exports = {usersRouter}

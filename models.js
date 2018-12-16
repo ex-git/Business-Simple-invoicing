@@ -49,6 +49,7 @@ const CustomerSchema = mongoose.Schema({
 })
 
 CustomerSchema.virtual("fullName").get(function(){
+    console.log(this)
     return `${this.firstName} ${this.lastName}`.trim();
 })
 

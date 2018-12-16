@@ -17,7 +17,7 @@ customerRouter.get("/", jwtAuth, (req, res)=>{
             const companyName = customers.map(customer=>customer.companyName)
             const customerName = customers.map(customer=>customer.fullName)
             const customerID = customers.map(customer=>customer._id)
-            res.status(200).json({companies: companyName, customers: customerName, ids: customerID})
+            res.status(200).json({companies: companyName, customers: customerName, ids: customerID, detail: customers})
         }
         else {
             res.status(404).json({message: "No customer found"})
@@ -31,6 +31,20 @@ customerRouter.get("/find", jwtAuth, (req, res)=>{
     .then(customer=>{
         {if (customer) {
             res.status(200).json({"message": `customer found`, "user": req.user, "customer": customer})
+        }
+        else {
+            res.status(404).json({"message": `Nothing found, please try something else`})
+        }
+    }})
+})
+
+customerRouter.get("/search", jwtAuth, (req, res)=>{
+    console.info(req.query)
+    const queryName = Object.keys(req.query)[0]
+    Customer.find({[queryName]: req.query[queryName], userName: req.user.userName})
+    .then(customer=>{
+        {if (customer) {
+            res.status(200).json({"message": `customer found`, "user": req.user, "customers": customer})
         }
         else {
             res.status(404).json({"message": `Nothing found, please try something else`})
@@ -103,6 +117,7 @@ customerRouter.put("/", jwtAuth, (req, res)=>{
 })
 
 customerRouter.delete("/delete", jwtAuth, (req, res)=>{
+    console.info(req.query)
     const queryName = Object.keys(req.query)[0]
     Invoice.deleteMany({customer: req.query[queryName]})
     .then(()=>{

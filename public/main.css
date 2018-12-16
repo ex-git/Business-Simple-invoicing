@@ -108,6 +108,12 @@ legend {
     cursor: not-allowed
 }
 
+input:disabled {
+    background-color: #5fba7d;
+    cursor: not-allowed
+}
+
+
 .submit {
     margin-right: 5px
 }
@@ -122,6 +128,7 @@ fieldset {
 .addCustomer input,
 .newInvoiceForm input,
 .searchInvoice input,
+.searchCustomer input,
 .editProfileForm input {
     width: 200px;
     height: 20px;
@@ -141,9 +148,8 @@ fieldset {
     margin: 20px auto
 }
 
-.searchInvoice input[type="radio"] {
+.searchInvoice input[type="radio"], .searchCustomer input[type="radio"] {
     width:20px;
-    margin-left: 5px;
     vertical-align: middle
 }
 
@@ -169,6 +175,10 @@ fieldset {
     clear: both
 }
 
+
+#keyword {
+    margin-top: 10px
+}
 .feature {
     display: block
 }
@@ -289,10 +299,13 @@ fieldset {
     min-height: 100%
 }
 .searchResult, .actionButton {
-    max-width:680px;
     margin: 20px auto;
     text-align: center;
     overflow: scroll
+}
+
+.searchResult table{
+    margin: auto
 }
 
 .searchResult td{

@@ -1,26 +1,29 @@
 # Business simple invoicing system
-
+```
 ## Summary
   This is a simple invoicing app for SMB owner like ebayer or Amazon seller who need simple system to create invoice without spending a lot of money and effort to deal with quickbook.
-
+```
 ## Key technology used
 
-  -HTML
-  -CSS
-  -JavaScript
-  -jQuery
-  -MongoDB
-    -Mongoose
-  -NodeJS
-    -Express
-    -Passport
-    -JWT
-    -bcryptjs
-
+  *HTML
+  *CSS
+  *JavaScript
+  *jQuery
+  *MongoDB
+    *Mongoose
+  *NodeJS
+    *Express
+    *Passport
+    *JWT
+    *bcryptjs
+```
 ## Online Demo
 
 https://secure-badlands-23193.herokuapp.com/
 
+demo login: demo
+password: demo
+```
 ## Screenshots
 
 Home Page
