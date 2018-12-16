@@ -1540,6 +1540,7 @@ function cancelButton() {
             if (confirm('If you leave before saving, your changes will be lost')) {
                 $('.centerBody').html(featureSelections);
                 $('.main').removeData("changed");
+                $('searchResult').remove()
             }
             else {
                 // Do nothing!
