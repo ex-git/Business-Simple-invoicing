@@ -1540,7 +1540,7 @@ function cancelButton() {
             if (confirm('If you leave before saving, your changes will be lost')) {
                 $('.centerBody').html(featureSelections);
                 $('.main').removeData("changed");
-                $('searchResult').remove()
+                $('.searchResult').remove()
             }
             else {
                 // Do nothing!
@@ -1580,7 +1580,7 @@ function editProfile() {
         keepJWTfresh()
         $('.centerBody').html(editProfileForm)
         $('.centerBody').removeData("newInvoice")
-        $('searchResult').remove()
+        $('.searchResult').remove()
         //get user info from database
         fetch(userENDPOINT)
         .then(response=>{
