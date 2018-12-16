@@ -314,7 +314,7 @@ fieldset {
     text-align: center
 }
 
-.searchResult td[class^='invoice'] {
+.searchResult td[class^='invoice'], .searchResult td[class^='customer'] {
     font-size: 1.1em;
     font-weight: bold;
 
