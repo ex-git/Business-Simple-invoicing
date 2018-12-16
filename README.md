@@ -5,8 +5,6 @@
 
 ## Key technology used
 
-## Built With
-
   * HTML
   * CSS
   * JavaScript
@@ -26,6 +24,8 @@ https://secure-badlands-23193.herokuapp.com/
 ```
 demo login: demo
 password: demo
+
+Note: login with demo account will not have account delete and pasword update feature although you will still get successful message when trigger that. 
 ```
 
 ## Screenshots
