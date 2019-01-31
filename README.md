@@ -19,7 +19,7 @@
 
 ## Online Demo
 
-https://secure-badlands-23193.herokuapp.com/
+http://invoicing.fodx.com
 
 ```
 demo login: demo
