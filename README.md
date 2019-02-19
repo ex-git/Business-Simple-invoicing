@@ -19,7 +19,7 @@
 
 ## Online Demo
 
-http://invoicing.fodx.com
+https://invoicing.evanxu.me
 
 ```
 demo login: demo
